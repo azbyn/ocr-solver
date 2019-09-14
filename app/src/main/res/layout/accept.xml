@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    style="@style/BaseLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout style="@style/TopBar"
+        android:id="@+id/top">
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/back"
+            android:src="@drawable/ic_back"/>
+
+        <TextView style="@style/TopText"
+            android:id="@+id/textView"
+            android:layout_toEndOf="@+id/back"
+            android:text="@string/accept" />
+
+        <!--android:layout_marginEnd="10dp"-->
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/BottomBar"
+        android:layout_height="110dp"
+        android:id="@+id/bottom">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/middle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"/>
+
+
+        <Button style="@style/Button"
+            android:id="@+id/feelingLucky"
+            android:text="@string/feeling_lucky"
+
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/middle" />
+        <Button style="@style/Button"
+            android:id="@+id/fastForward"
+            android:text="@string/fastForward"
+
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/middle"/>
+
+        <Button style="@style/BtnImage"
+            android:id="@+id/rotate"
+            android:background="@drawable/ic_rotate"
+            android:text="@string/rotate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button style="@style/BtnImage"
+            android:id="@+id/crop"
+            android:background="@drawable/ic_crop"
+            android:text="@string/crop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <Button style="@style/BtnImage"
+            android:id="@+id/ok"
+            android:background="@drawable/ic_ok_small"
+            android:text="@string/continue_"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!--Button style="@style/BtnImage50"
+            android:id="@+id/fastForward"
+            android:background="@drawable/ic_fast_forward_small"
+            android:text="@string/fastForward"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" /-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.azbyn.ocr.ZoomableImageView style="@style/ImageView"
+        android:id="@+id/imageView"
+        android:layout_above="@+id/bottom"
+        android:layout_below="@+id/top"/>
+
+</RelativeLayout>

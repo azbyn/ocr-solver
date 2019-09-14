@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="top_height">50dp</dimen>
+    <dimen name="bottom_height">60dp</dimen>
+
+    <dimen name="frame_height">100dp</dimen>
+    <dimen name="image_button_padding">20dp</dimen>
+    <dimen name="textSize">25sp</dimen>
+    <dimen name="image_button_text_size">5pt</dimen>
+    <dimen name="capture_top_height">35dp</dimen>
+</resources>

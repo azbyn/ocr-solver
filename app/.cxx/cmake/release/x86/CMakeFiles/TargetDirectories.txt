@@ -1,0 +1,3 @@
+/home/azbyn/Git/Ocr/app/.cxx/cmake/release/x86/CMakeFiles/edit_cache.dir
+/home/azbyn/Git/Ocr/app/.cxx/cmake/release/x86/CMakeFiles/rebuild_cache.dir
+/home/azbyn/Git/Ocr/app/.cxx/cmake/release/x86/CMakeFiles/jni.dir

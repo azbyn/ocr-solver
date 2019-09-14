@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout style="@style/BaseLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayout">
+
+    <RelativeLayout style="@style/TopBar"
+        android:id="@+id/top">
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/back"
+            android:src="@drawable/ic_back" />
+
+        <TextView style="@style/TopText"
+            android:id="@+id/topText"
+            android:layout_toEndOf="@+id/back"
+            android:text="@string/select_density"/>
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/BottomBar"
+        android:id="@+id/bottom"
+        android:layout_height="100dp"
+        android:layout_width="match_parent">
+
+        <TextView style="@style/RegularText"
+            android:id="@+id/infoText1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center|end"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/minus1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_minus"
+            app:layout_constraintBottom_toBottomOf="@id/seekBar1"
+            app:layout_constraintTop_toTopOf="@id/seekBar1"
+            app:layout_constraintStart_toEndOf="@+id/infoText1"/>
+
+        <SeekBar style="@style/SeekBar"
+            android:id="@+id/seekBar1"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toStartOf="@id/valueText1"
+            app:layout_constraintStart_toEndOf="@+id/minus1"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView style="@style/RegularText"
+            android:id="@+id/valueText1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toStartOf="@id/plus1"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/plus1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="0dp"
+            android:src="@drawable/ic_plus"
+            app:layout_constraintBottom_toBottomOf="@id/seekBar1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/seekBar1" />
+
+
+        <Button style="@style/BtnImage50"
+            android:id="@+id/reset"
+            android:background="@drawable/ic_reset"
+            android:text="@string/reset"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button style="@style/BtnImage50"
+            android:id="@+id/ok"
+            android:background="@drawable/ic_ok_small"
+            android:text="@string/ok"
+            app:layout_constraintHorizontal_bias="0.75"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/densityText"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_above="@+id/bottom"
+        android:layout_marginBottom="0dp"
+        android:gravity="center_vertical"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+    <com.azbyn.ocr.ZoomableImageView style="@style/ImageView"
+        android:id="@+id/imageView"
+        android:layout_above="@+id/densityText"
+        android:layout_below="@+id/top" />
+    <com.azbyn.ocr.roi.SelectDensityOverlay
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/densityText"
+        android:layout_below="@+id/top"/>
+</RelativeLayout>

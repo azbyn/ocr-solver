@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout style="@style/BaseLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <RelativeLayout style="@style/TopBar"
+        android:id="@+id/top"
+        android:layout_height="@dimen/capture_top_height">
+        <!--TODO make a dropdown-->
+
+        <ImageButton
+            style="@style/ImageButton"
+            android:id="@+id/flash"
+            android:src="@drawable/ic_flash_auto"
+            android:layout_width="@dimen/capture_top_height"
+            android:layout_height="@dimen/capture_top_height"
+            android:layout_marginStart="20dp" />
+
+    </RelativeLayout>
+
+    <com.azbyn.ocr.capture.AutoFitTextureView
+        android:id="@+id/texture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top" />
+    <!--
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp" /-->
+
+    <com.azbyn.ocr.capture.AngleIndicator
+        android:id="@+id/angleIndicator"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/top" />
+
+    <FrameLayout style="@style/BottomBar"
+        android:id="@+id/bottom"
+        android:layout_height="@dimen/frame_height">
+
+        <Button style="@style/BtnImage"
+            android:id="@+id/calibrate"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center|start"
+            android:background="@drawable/ic_straighten"
+            android:paddingTop="35dp"
+            android:text="@string/calibrate"
+            android:layout_marginStart="20dp"
+            android:textSize="5pt" />
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/picture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_take_photo" />
+
+        <Button style="@style/BtnImage"
+            android:id="@+id/useSaved"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center|end"
+            android:background="@drawable/ic_image_small"
+            android:text="@string/use_saved"
+            android:layout_marginEnd="20dp" />
+        <!--CheckedTextView
+            android:id="@+id/useSaved"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="center|end"
+            android:gravity="center"
+            android:drawableTop="@drawable/checkmark"
+            android:textColor="#FFF"
+            android:buttonTint="#FFF"
+            android:textSize="12sp"
+            android:text="use saved image" /-->
+        <!--ImageButton
+            android:id="@+id/info"
+            android:contentDescription="@string/description_info"
+            style="@android:style/Widget.Material.Light.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:padding="@dimen/image_button_padding"
+            android:src="@drawable/ic_action_info" /-->
+
+    </FrameLayout>
+
+</RelativeLayout>

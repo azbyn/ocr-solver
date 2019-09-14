@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout style="@style/BaseLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayout">
+
+    <RelativeLayout style="@style/TopBar"
+        android:id="@+id/top">
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/back"
+            android:src="@drawable/ic_back" />
+
+        <TextView style="@style/TopText"
+            android:id="@+id/topText"
+            android:layout_toEndOf="@+id/back"/>
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/BottomBar"
+        android:id="@+id/bottom"
+        android:layout_height="200dp"
+        android:layout_width="match_parent">
+
+
+        <TextView style="@style/RegularText"
+            android:id="@+id/infoText1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center|end"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/minus1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toEndOf="@+id/infoText1"
+            android:src="@drawable/ic_minus"
+            app:layout_constraintBottom_toBottomOf="@id/seekBar1"
+            app:layout_constraintTop_toTopOf="@id/seekBar1"
+            app:layout_constraintStart_toEndOf="@+id/infoText1"/>
+
+        <SeekBar style="@style/SeekBar"
+            android:id="@+id/seekBar1"
+            android:layout_height="50dp"
+            android:layout_width="0dp"
+            app:layout_constraintEnd_toStartOf="@id/valueText1"
+            app:layout_constraintStart_toEndOf="@+id/minus1"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView style="@style/RegularText"
+            android:id="@+id/valueText1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toStartOf="@id/plus1"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/plus1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/ic_plus"
+            app:layout_constraintBottom_toBottomOf="@id/seekBar1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/seekBar1" />
+
+        <!--MID-->
+        <TextView style="@style/RegularText"
+            android:id="@+id/infoText2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center|end"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/seekBar1" />
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/minus2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toEndOf="@+id/infoText2"
+            android:src="@drawable/ic_minus"
+            app:layout_constraintBottom_toBottomOf="@id/seekBar2"
+            app:layout_constraintTop_toTopOf="@id/seekBar2"
+            app:layout_constraintStart_toEndOf="@+id/infoText1"/>
+
+        <SeekBar style="@style/SeekBar"
+            android:id="@+id/seekBar2"
+            android:layout_height="50dp"
+            android:layout_width="0dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintEnd_toStartOf="@id/valueText2"
+            app:layout_constraintStart_toEndOf="@+id/minus2"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar1" />
+        <TextView style="@style/RegularText"
+            android:id="@+id/valueText2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toStartOf="@id/plus2"
+            app:layout_constraintTop_toTopOf="@+id/seekBar2"
+            app:layout_constraintBottom_toBottomOf="@+id/seekBar2"/>
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/plus2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/ic_plus"
+            app:layout_constraintBottom_toBottomOf="@id/seekBar2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/seekBar2" />
+
+
+
+        <!--BOTTOM-->
+        <TextView style="@style/RegularText"
+            android:id="@+id/infoText3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center|end"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/seekBar2" />
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/minus3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toEndOf="@+id/infoText3"
+            android:src="@drawable/ic_minus"
+            app:layout_constraintBottom_toBottomOf="@id/seekBar3"
+            app:layout_constraintTop_toTopOf="@id/seekBar3"
+            app:layout_constraintStart_toEndOf="@+id/infoText2"/>
+
+        <SeekBar style="@style/SeekBar"
+            android:id="@+id/seekBar3"
+            android:layout_height="50dp"
+            android:layout_width="0dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintEnd_toStartOf="@id/valueText3"
+            app:layout_constraintStart_toEndOf="@+id/minus3"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar2" />
+        <TextView style="@style/RegularText"
+            android:id="@+id/valueText3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toStartOf="@id/plus3"
+            app:layout_constraintTop_toTopOf="@+id/seekBar3"
+            app:layout_constraintBottom_toBottomOf="@+id/seekBar3"/>
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/plus3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/ic_plus"
+            app:layout_constraintBottom_toBottomOf="@id/seekBar3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/seekBar3" />
+
+
+        <!--Bottom btns-->
+
+        <Button style="@style/BtnImage50"
+            android:id="@+id/reset"
+            android:background="@drawable/ic_reset"
+            android:text="@string/reset"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button style="@style/BtnImage50"
+            android:id="@+id/ok"
+            android:background="@drawable/ic_ok_small"
+            android:text="@string/ok"
+            app:layout_constraintHorizontal_bias="0.75"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.azbyn.ocr.ZoomableImageView style="@style/ImageView"
+        android:id="@+id/imageView"
+        android:layout_above="@+id/bottom"
+        android:layout_below="@+id/top" />
+</RelativeLayout>

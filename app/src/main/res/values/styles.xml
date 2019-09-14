@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MaterialTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="BaseLayout">
+        <item name="android:background">@color/background</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="TopBar">
+        <item name="android:background">@color/controlBackground</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/top_height</item>
+    </style>
+
+    <style name="TopText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:gravity">center|start</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="android:textSize">@dimen/textSize</item>
+    </style>
+    <style name="RegularText">
+        <item name="android:textColor">#FFF</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="SeekBar">
+        <item name="android:progressBackgroundTint">#FFF</item>
+    </style>
+
+    <style name="ImageView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">fitCenter</item>
+        <!--May be commented out-->
+        <item name="android:src">@drawable/no_image_found</item>
+    </style>
+
+
+    <style name="BottomBar">
+        <item name="android:background">@color/controlBackground</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/bottom_height</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentStart">true</item>
+    </style>
+
+    <style name="BtnImage">
+        <item name="android:textSize">@dimen/image_button_text_size</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:paddingTop">40dp</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_width">@dimen/bottom_height</item>
+        <item name="android:layout_height">@dimen/bottom_height</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="BtnImage50">
+        <item name="android:textSize">@dimen/image_button_text_size</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:paddingTop">30dp</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="ImageButton">
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:background">#0000</item>
+        <item name="android:layout_width">@dimen/top_height</item>
+        <item name="android:layout_height">@dimen/top_height</item>
+    </style>
+
+    <style name="Button">
+        <item name="android:backgroundTint">@color/buttonBackground</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">#FFF</item>
+    </style>
+
+</resources>

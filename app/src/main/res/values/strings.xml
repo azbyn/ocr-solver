@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+ Copyright 2014 The Android Open Source Project
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<resources>
+    <string name="app_name">Ocr</string>
+    <string name="request_camera_permission">This app needs camera permission.</string>
+    <string name="request_io_permission">This app needs storage permissions.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="calibrate">Calibrate</string>
+    <string name="select_roi_text">%1$dx%2$d @ (%3$d, %4$d)</string>
+    <string name="select_density_text">Before: %1$dx%2$d\nAfter: %3$dx%4$d</string>
+    <string name="accept_density_text">Size: %1$dx%2$d\nAngle: %3$f</string>
+    <string name="ok">OK</string>
+    <string name="crop">Crop</string>
+    <string name="add90deg">+90°</string>
+    <string name="reset">Reset</string>
+    <string name="continue_">Continue</string>
+    <string name="use_saved">Use saved</string>
+
+    <string name="accept">Confirm</string>
+    <string name="rotate">Rotate</string>
+    <string name="blur">Blur</string>
+    <string name="select_roi">Select Grid ROI</string>
+    <string name="edit_threshold_max">Edit Threshold - max</string>
+    <string name="edit_threshold_min">Edit Threshold - min</string>
+    <string name="morphological">Morphological</string>
+    <string name="edit_lines">Edit Lines</string>
+    <string name="super_lines">Super Lines</string>
+    <string name="fastForward">Skip</string>
+    <string name="select_density">Select density</string>
+    <string name="accept_density">Confirm density</string>
+    <string name="threshold">Threshold</string>
+    <string name="line_mask">Line Mask</string>
+    <string name="remove_lines">Remove Lines</string>
+    <string name="feeling_lucky">I\'m Feeling Lucky</string>
+    <string name="auto_rotate">Auto rotate</string>
+</resources>

@@ -1,0 +1,8 @@
+# ninja log v5
+1	45	0	CMakeFiles/jni.dir/src/main/cpp/misc.cpp.o	7cc315bd7717f4d6
+2	1609	0	CMakeFiles/jni.dir/src/main/cpp/jni_utils.cpp.o	afe0a0a12392aa21
+1	2135	0	CMakeFiles/jni.dir/src/main/cpp/lines.cpp.o	3fef3e9765c8a8ce
+1	2376	0	CMakeFiles/jni.dir/src/main/cpp/cv_utils.cpp.o	ccc1142346303dfa
+1	2902	0	CMakeFiles/jni.dir/src/main/cpp/blobbing.cpp.o	ddd4d61f452643ab
+0	4906	0	CMakeFiles/jni.dir/src/main/cpp/fmt/format.cc.o	fa77663eca48a82e
+4906	5013	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libjni.so	67f1fa504bb9b9c

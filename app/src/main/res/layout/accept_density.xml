@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout style="@style/BaseLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout style="@style/TopBar"
+        android:id="@+id/top">
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/back"
+            android:src="@drawable/ic_back"/>
+
+        <TextView style="@style/TopText"
+            android:id="@+id/textView"
+            android:layout_toEndOf="@+id/back"
+            android:text="@string/accept_density" />
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/BottomBar"
+        android:id="@+id/bottom">
+
+        <CheckedTextView
+            android:id="@+id/autoRotate"
+            android:layout_width="@dimen/bottom_height"
+            android:layout_height="@dimen/bottom_height"
+            android:gravity="center"
+            android:drawableTop="@drawable/checkmark"
+            android:paddingTop="10dp"
+            android:textColor="#FFF"
+            android:buttonTint="#FFF"
+            android:textSize="@dimen/image_button_text_size"
+            android:text="@string/auto_rotate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toStartOf="parent" />
+        <Button style="@style/BtnImage"
+            android:id="@+id/ok"
+            android:background="@drawable/ic_ok_small"
+            android:text="@string/continue_"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+        <Button style="@style/BtnImage"
+            android:id="@+id/fastForward"
+            android:background="@drawable/ic_fast_forward_small"
+            android:text="@string/fastForward"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/densityText"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_above="@+id/bottom"
+        android:layout_marginBottom="0dp"
+        android:gravity="center_vertical"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+    <com.azbyn.ocr.ZoomableImageView style="@style/ImageView"
+        android:id="@+id/imageView"
+        android:layout_above="@+id/densityText"
+        android:layout_below="@+id/top" />
+    <com.azbyn.ocr.roi.SelectDensityOverlay
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/densityText"
+        android:layout_below="@+id/top"/>
+</RelativeLayout>

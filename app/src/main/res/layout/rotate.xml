@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout style="@style/BaseLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout style="@style/TopBar"
+        android:id="@+id/top">
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/back"
+            android:src="@drawable/ic_back" />
+
+        <TextView style="@style/TopText"
+            android:id="@+id/textView"
+            android:layout_toEndOf="@+id/back"
+            android:text="@string/rotate"/>
+    </RelativeLayout>
+
+    <GridLayout style="@style/BottomBar"
+        android:id="@+id/bottom">
+
+        <Button style="@style/BtnImage"
+            android:id="@+id/reset"
+            android:background="@drawable/ic_reset"
+            android:text="@string/reset"/>
+        <Button style="@style/BtnImage"
+            android:id="@+id/add90"
+            android:background="@drawable/ic_rotate_90_degrees_ccw"
+            android:text="@string/add90deg"/>
+        <Button style="@style/BtnImage"
+            android:id="@+id/ok"
+            android:background="@drawable/ic_ok_small"
+            android:text="@string/ok"/>
+    </GridLayout>
+
+    <ImageView style="@style/ImageView"
+        android:id="@+id/imageView"
+        android:layout_above="@+id/rotateViewer"
+        android:layout_below="@+id/top"/>
+    <com.azbyn.ocr.rotate.RotateImageOverlay
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rotateViewer"
+        android:layout_below="@+id/top"/>
+
+    <com.azbyn.ocr.rotate.RotateViewer
+        android:id="@+id/rotateViewer"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_above="@+id/bottom"/>
+</RelativeLayout>
