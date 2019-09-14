@@ -9,6 +9,6 @@
     <dimen name="image_button_text_size">5pt</dimen>
     <dimen name="capture_top_height">35dp</dimen>
 
-    <dimen name="img_margins">10dp</dimen>
+    <dimen name="img_margins">20dp</dimen>
 
 </resources>

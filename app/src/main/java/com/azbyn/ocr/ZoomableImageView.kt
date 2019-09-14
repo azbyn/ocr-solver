@@ -36,7 +36,7 @@ class ZoomableImageView: AppCompatImageView {
 
 
         //If setMinZoom(AUTOMATIC_MIN_ZOOM), then we'll set the min scale to include the whole image.
-        const val AUTOMATIC_MIN_ZOOM = -1.0f
+        //const val AUTOMATIC_MIN_ZOOM = -1.0f
 
         const val ZOOM_TIME = 500f
     }
@@ -45,11 +45,12 @@ class ZoomableImageView: AppCompatImageView {
     // when the image is stretched to fit view.
     private var normalizedScale = 1f
 
+    private var margin = 10f
+
     // Matrix applied to image. MSCALE_X and MSCALE_Y should always be equal.
     // MTRANS_X and MTRANS_Y are the other values used. prevMatrix is the matrix
     // saved prior to the screen rotating.
     private val _matrix : Matrix = Matrix()
-    private var margin = 10f
 
     private val prevMatrix : Matrix = Matrix()
 
@@ -62,7 +63,6 @@ class ZoomableImageView: AppCompatImageView {
     var viewSizeChangeFixedPixel = FixedPixel.CENTER
 
     private var orientationJustChanged = false
-
 
     private enum class State {NONE, DRAG, ZOOM, FLING, ANIMATE_ZOOM}
 
@@ -388,7 +388,7 @@ class ZoomableImageView: AppCompatImageView {
      * Reset zoom and translation to initial state.
      */
     fun resetZoom() {
-        logd("resetZoom() $minScale, $margin")
+        //logd("resetZoom() $minScale, $margin")
         normalizedScale = minScale //1f
         fitImageToView()
     }
@@ -600,13 +600,14 @@ class ZoomableImageView: AppCompatImageView {
 
         //if (margin >= 0f) {
         minScale = (w - 2*margin) / w
-        logd("sz: $w, $h, $oldw, $oldh")
-        logd("updated with minscale? $minScale $currentZoom")
+        superMinScale = SUPER_MIN_MULTIPLIER * minScale
+        //logd("sz: $w, $h, $oldw, $oldh")
+        //logd("updated with minscale? $minScale $currentZoom")
         if (currentZoom <= 1f && margin != 0f) {
-            normalizedScale = 1f
-            logd("resetZoom")
+            resetZoom()
+        } else {
+            fitImageToView()
         }
-        fitImageToView()
     }
 
     /**
@@ -847,8 +848,18 @@ class ZoomableImageView: AppCompatImageView {
         }
 
         override fun onDoubleTap(e: MotionEvent?): Boolean {
-            //logd("double tap")
+            //logd("double tap $state")
             //return if (zoomEnabled) {
+            if (doubleTapListener != null) {
+                return doubleTapListener!!.onDoubleTap(e)
+            }
+            if (state == State.NONE || state == State.FLING) {
+                val targetZoom = if (normalizedScale == minScale) maxScale else minScale
+                val doubleTap = DoubleTapZoom(targetZoom, e!!.x, e.y, false)
+                compatPostOnAnimation(doubleTap)
+                return true
+            }
+            return false/*
             return when {
                     doubleTapListener != null -> doubleTapListener!!.onDoubleTap(e)
                     state == State.NONE -> {
@@ -858,7 +869,7 @@ class ZoomableImageView: AppCompatImageView {
                         true
                     }
                     else -> false
-                }
+                }*/
             /*} else {
                 false
             }*/
@@ -896,6 +907,8 @@ class ZoomableImageView: AppCompatImageView {
             // User-defined OnTouchListener
 
             if (state != State.ZOOM && userTouchListener?.onTouch(v, event) == true) {
+                //state = State.NONE
+                //fling?.cancelFling()
                 imageMatrix = _matrix
                 //logd("state was $state, action ${event.action}")
                 return true

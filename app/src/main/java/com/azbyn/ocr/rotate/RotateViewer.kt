@@ -60,7 +60,7 @@ class RotateViewer : View {
     private var _pressed = false
     private var prevX = 0f
     private var pxPerAngle = 1f
-    var overlay: RotateImageOverlay? = null
+    var overlay: RotateOverlay? = null
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {

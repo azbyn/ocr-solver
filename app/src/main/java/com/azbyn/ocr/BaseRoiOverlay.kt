@@ -47,10 +47,10 @@ abstract class BaseRoiOverlay : BaseOverlay {
         matWidth = drawableWidth
         matHeight = drawableHeight
         lineRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 5f,
-                resources.displayMetrics) * width / matWidth
+                resources.displayMetrics) //* matWidth / width / matWidth
         imageView.resetZoom()
         //logd("margin: $margin, ${imageView.margin}")
-        onReset()
+        reset()
     }
 
 
@@ -63,7 +63,9 @@ abstract class BaseRoiOverlay : BaseOverlay {
         super.update()
     }
 
-    fun onReset() { update() }
+
+    @CallSuper
+    open fun reset() { update() }
 
     final override fun onTouchImpl(event: MotionEvent): Boolean {
         if (pressType == PT_NONE && event.action != MotionEvent.ACTION_DOWN)
@@ -73,6 +75,7 @@ abstract class BaseRoiOverlay : BaseOverlay {
             pressType = PT_NONE
             return false
         }
+        //logd("oida %02X".format(pressType))
 
         p.x = event.x
         p.y = event.y
@@ -100,6 +103,7 @@ abstract class BaseRoiOverlay : BaseOverlay {
         val t = rect.top
         val b = rect.bottom
         val lr = lineRadius / scale
+        logd("lr $lr")
         // if the press type is not PT_NONE
         // presses might be blocked to the ImageView
         assert(pressType == PT_NONE)

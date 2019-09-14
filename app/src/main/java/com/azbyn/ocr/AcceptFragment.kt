@@ -63,6 +63,7 @@ class AcceptFragment : ImageViewFragment() {
 
     class VM : BaseViewModel() {
         val resultMat get() = getViewModel<CaptureFragment.VM>().mat
+
         fun writeMatAsync(path: String) {
             /*
             AsyncTask.execute {
@@ -71,6 +72,11 @@ class AcceptFragment : ImageViewFragment() {
                 }
                 logd("wrote img done in $t")
             }*/
+        }
+        fun crop(ctx: Context, roi: CvRect) {
+            ctx.tryOrComplain {
+                resultMat.submat(roi).copyTo(resultMat)
+            }
         }
         fun rotate(ctx: Context, angle: Double, isHorizontal: Boolean) {
             val w = resultMat.width().toDouble()

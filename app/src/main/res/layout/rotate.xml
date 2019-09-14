@@ -36,7 +36,7 @@
         android:id="@+id/imageView"
         android:layout_above="@+id/rotateViewer"
         android:layout_below="@+id/top"/>
-    <com.azbyn.ocr.rotate.RotateImageOverlay
+    <com.azbyn.ocr.rotate.RotateOverlay
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

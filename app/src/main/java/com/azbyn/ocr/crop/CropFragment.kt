@@ -25,6 +25,7 @@ class CropFragment : ImageViewFragment() {
         back.setOnClickListener { onBack() }
         reset.setOnClickListener {
             imageView.resetZoom()
+            overlay.reset()
         }
         ok.setOnClickListener { onOK() }
 
@@ -32,6 +33,10 @@ class CropFragment : ImageViewFragment() {
         //overlay.rotateViewer = rotateViewer
     }
 
+    override fun onOK() {
+        viewModel.crop(mainActivity, overlay.roi)
+        super.onOK()
+    }
     override fun initImpl(isOnBack: Boolean) {
         setImagePreview(viewModel.resultMat)
         imageView.resetZoom()

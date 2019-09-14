@@ -46,7 +46,7 @@ class SelectRoiFragment: ImageViewFragment() {
         view.findViewById<View>(R.id.reset).setOnClickListener {
             imageView.resetZoom()
             viewModel.reset()
-            overlay.onReset()
+            overlay.reset()
         }
         view.findViewById<View>(R.id.ok).setOnClickListener { onOK() }
     }

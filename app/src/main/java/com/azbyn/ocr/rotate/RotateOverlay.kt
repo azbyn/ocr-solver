@@ -12,7 +12,7 @@ import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.min
 
-class RotateImageOverlay : View {
+class RotateOverlay : View {
     var rotateViewer: RotateViewer? = null
     private lateinit var imageView: ImageView
     private val density = resources.displayMetrics.density
