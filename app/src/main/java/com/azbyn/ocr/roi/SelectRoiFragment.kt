@@ -32,7 +32,10 @@ class SelectRoiFragment: ImageViewFragment() {
         imageView.resetZoom()
         overlay.runWhenInitialized {
             //viewModel.init(inViewModel.resultMat)
-            overlay.init(viewModel, imageView, roiText)
+
+            val matWidth = viewModel.fullMapWidth
+            val matHeight = viewModel.fullMapHeight
+            overlay.init(matWidth, matHeight, viewModel.roi, imageView, roiText)
         }
         setImagePreview(inViewModel.resultMat)
     }
@@ -43,7 +46,7 @@ class SelectRoiFragment: ImageViewFragment() {
         view.findViewById<View>(R.id.reset).setOnClickListener {
             imageView.resetZoom()
             viewModel.reset()
-            overlay.reset()
+            overlay.onReset()
         }
         view.findViewById<View>(R.id.ok).setOnClickListener { onOK() }
     }

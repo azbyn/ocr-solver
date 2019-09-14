@@ -17,6 +17,8 @@ import java.util.*
 import java.util.logging.Logger
 import kotlin.system.measureTimeMillis
 
+typealias CvRect = org.opencv.core.Rect
+
 const val DESIRED_DENSITY = 30
 const val GRAYED_OUT_COLOR: Int = 0xA0_00_00_00.toInt()
 fun Float.format(digits: Int=2) = "%.${digits}f".format(this)

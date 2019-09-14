@@ -3,10 +3,9 @@ package com.azbyn.ocr.roi
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.TypedValue
-import android.view.MotionEvent
 import android.widget.TextView
 import com.azbyn.ocr.BaseRoiOverlay
+import com.azbyn.ocr.CvRect
 import com.azbyn.ocr.R
 import com.azbyn.ocr.ZoomableImageView
 
@@ -20,11 +19,13 @@ class SelectRoiOverlay : BaseRoiOverlay {
         color = 0xA0_00_FF_00.toInt()
         style = Paint.Style.STROKE
     }
+    override lateinit var roi: CvRect
 
-    fun init(drawableWidth: Int, drawableHeight: Int,
+    fun init(drawableWidth: Int, drawableHeight: Int, roi: CvRect,
              imageView: ZoomableImageView, text: TextView) {
-        super.init(drawableWidth, drawableHeight, imageView)
         this.text = text
+        this.roi = roi
+        super.init(drawableWidth, drawableHeight, imageView)
     }
 
     override fun update() {
@@ -40,6 +41,16 @@ class SelectRoiOverlay : BaseRoiOverlay {
         paint.strokeWidth = 2f * density * (imageView?.currentZoom?:1f)
         canvas.drawRect(screenRect, paint)
     }
+
+    override fun onReset() {
+        // roi is set, so we update rect
+        rect.left = roi.x.toFloat()
+        rect.top = roi.y.toFloat()
+        rect.right = (roi.x + roi.width).toFloat()
+        rect.bottom = (roi.y + roi.height).toFloat()
+        update()
+    }
+
 
     /*
     private companion object {

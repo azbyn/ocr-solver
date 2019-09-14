@@ -1,14 +1,10 @@
 package com.azbyn.ocr
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
-import android.view.View
-import androidx.annotation.CallSuper
-import org.opencv.core.Rect as CvRect
 
 abstract class BaseRoiOverlay : BaseOverlay {
     private companion object {
@@ -31,12 +27,17 @@ abstract class BaseRoiOverlay : BaseOverlay {
     private val scale get() = imageView?.matrixScale ?: 1f
 
     //private val roi get() = viewModel.roi
-    protected var matWidth = 0
+    protected var matWidth = 0f
         private set
-    protected var matHeight = 0
+    protected var matHeight = 0f
         private set
 
-    //val roi = CvRect()
+    abstract val roi : CvRect//()
+
+    private var pressType = PT_NONE
+    private val prev = PointF()
+    private val p = PointF()
+
     protected fun updateRoi() {
         roi.x = rect.left.toInt()
         roi.y = rect.right.toInt()
@@ -48,25 +49,16 @@ abstract class BaseRoiOverlay : BaseOverlay {
 
     override fun init(drawableWidth: Int, drawableHeight: Int, imageView: ZoomableImageView) {
         super.init(drawableWidth, drawableHeight, imageView)
-        matWidth = drawableWidth
-        matHeight = drawableHeight
+        matWidth = drawableWidth.toFloat()
+        matHeight = drawableHeight.toFloat()
         lineRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 5f,
                 resources.displayMetrics) * width / matWidth
-        reset()
+        onReset()
     }
 
-    fun reset() {
-        updateRoi(0)
-    }
+    abstract fun onReset()
 
-    //private var prevX = 0f
-    //private var prevY = 0f
-    private var pressType = PT_NONE
-    private val prev = PointF()
-    private val p = PointF()
-
-    //override fun onTouchEvent(event: MotionEvent): Boolean {
-    override fun onTouchImpl(event: MotionEvent): Boolean {
+    final override fun onTouchImpl(event: MotionEvent): Boolean {
         if (pressType == PT_NONE && event.action != MotionEvent.ACTION_DOWN)
             return false
 
@@ -88,6 +80,7 @@ abstract class BaseRoiOverlay : BaseOverlay {
             }
             MotionEvent.ACTION_MOVE -> {
                 onMove(p.x, p.y)
+                update()
                 prev.x = p.x
                 prev.y = p.y
                 true
@@ -125,65 +118,63 @@ abstract class BaseRoiOverlay : BaseOverlay {
     }
     private fun onMove(x: Float, y: Float) {
         //logd("move")
-        val deltaX = (x - prev.x).toInt()
-        val deltaY = (y - prev.y).toInt()
+        val deltaX = (x - prev.x)
+        val deltaY = (y - prev.y)
 
         val isCenter = pressType == (PT_H_CENTER or PT_V_CENTER)
 
         if (isCenter) {
-            roi.x += deltaX
-            if (roi.x < 0) {
-                roi.x = 0
-            } else if (roi.x + roi.width > matWidth) {
-                roi.x = matWidth - roi.width
+            rect.left += deltaX
+            rect.right += deltaX
+            if (rect.left < 0) {
+                rect.right -= rect.left
+                rect.left = 0f
+            } else if (rect.right > matWidth) {
+                rect.left += matWidth - rect.right
+                rect.right = matWidth
             }
 
-            roi.y += deltaY
-            if (roi.y < 0) {
-                roi.y = 0
-            } else if ((roi.y + roi.height) > matHeight) {
-                roi.y = matHeight - roi.height
+            rect.top += deltaY
+            rect.bottom += deltaY
+            if (rect.top < 0) {
+                rect.bottom -= rect.top
+                rect.top = 0f
+            } else if (rect.bottom > matHeight) {
+                rect.top += matHeight - rect.bottom
+                rect.bottom = matHeight
             }
         } else {
             if ((pressType and PT_LEFT) != 0) {
-                roi.x += deltaX
-                roi.width -= deltaX
-                if (roi.width < MIN_SIZE) {
-                    val right = roi.x + roi.width
-                    roi.x = right - MIN_SIZE
-                    roi.width = MIN_SIZE
-                } else if (roi.x < 0) {
-                    roi.width += roi.x
-                    roi.x = 0
+                rect.left += deltaX
+                if (rect.width() < MIN_SIZE) {
+                    rect.left = rect.right - MIN_SIZE
+                } else if (rect.left < 0) {
+                    rect.left = 0f
                 }
             }
             else if ((pressType and PT_RIGHT) != 0) {
-                roi.width += deltaX
-                if (roi.width < MIN_SIZE) {
-                    roi.width = MIN_SIZE
-                } else if (roi.x + roi.width > matWidth) {
-                    roi.width = matWidth - roi.x
+                rect.right += deltaX
+                if (rect.width() < MIN_SIZE) {
+                    rect.right = rect.left + MIN_SIZE
+                } else if (rect.right > matWidth) {
+                    rect.right = matWidth
                 }
             }
 
             if ((pressType and PT_TOP) != 0) {
-                roi.y += deltaY
-                roi.height -= deltaY
-                if (roi.height < MIN_SIZE) {
-                    val bot = roi.y + roi.height
-                    roi.y = bot - MIN_SIZE
-                    roi.height = MIN_SIZE
-                } else if (roi.y < 0) {
-                    roi.height += roi.y
-                    roi.y = 0
+                rect.top += deltaY
+                if (rect.height() < MIN_SIZE) {
+                    rect.top = rect.bottom - MIN_SIZE
+                } else if (rect.top < 0) {
+                    rect.top = 0f
                 }
             }
             else if ((pressType and PT_BOTTOM) != 0) {
-                roi.height += deltaY
-                if (roi.height < MIN_SIZE) {
-                    roi.height = MIN_SIZE
-                } else if (roi.y + roi.height > matHeight) {
-                    roi.height = matHeight - roi.y
+                rect.bottom += deltaY
+                if (rect.height() < MIN_SIZE) {
+                    rect.bottom = rect.top + MIN_SIZE
+                } else if (rect.bottom > matHeight) {
+                    rect.bottom = matHeight
                 }
             }
         }
