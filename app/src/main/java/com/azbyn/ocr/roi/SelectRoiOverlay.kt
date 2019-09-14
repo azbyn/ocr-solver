@@ -29,7 +29,6 @@ class SelectRoiOverlay : BaseRoiOverlay {
     }
 
     override fun update() {
-        updateRoi()
         text.text = context.getString(R.string.select_roi_text,
                 roi.width, roi.height, roi.x, roi.y)
         super.update()
@@ -41,16 +40,6 @@ class SelectRoiOverlay : BaseRoiOverlay {
         paint.strokeWidth = 2f * density * (imageView?.currentZoom?:1f)
         canvas.drawRect(screenRect, paint)
     }
-
-    override fun onReset() {
-        // roi is set, so we update rect
-        rect.left = roi.x.toFloat()
-        rect.top = roi.y.toFloat()
-        rect.right = (roi.x + roi.width).toFloat()
-        rect.bottom = (roi.y + roi.height).toFloat()
-        update()
-    }
-
 
     /*
     private companion object {

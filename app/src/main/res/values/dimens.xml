@@ -8,4 +8,7 @@
     <dimen name="textSize">25sp</dimen>
     <dimen name="image_button_text_size">5pt</dimen>
     <dimen name="capture_top_height">35dp</dimen>
+
+    <dimen name="img_margins">10dp</dimen>
+
 </resources>

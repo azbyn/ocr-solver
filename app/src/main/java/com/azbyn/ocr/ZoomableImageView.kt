@@ -49,6 +49,7 @@ class ZoomableImageView: AppCompatImageView {
     // MTRANS_X and MTRANS_Y are the other values used. prevMatrix is the matrix
     // saved prior to the screen rotating.
     private val _matrix : Matrix = Matrix()
+    private var margin = 10f
 
     private val prevMatrix : Matrix = Matrix()
 
@@ -68,7 +69,7 @@ class ZoomableImageView: AppCompatImageView {
     private var state = State.NONE
 
 
-    private var userSpecifiedMinScale = 0f
+    //private var userSpecifiedMinScale = 0f
     //private var maxScaleIsSetByMultiplier = false
     //private var maxScaleMultiplier = 0f
 
@@ -128,7 +129,6 @@ class ZoomableImageView: AppCompatImageView {
     constructor(ctx: Context, attrs: AttributeSet?, defStyle: Int) : super(ctx, attrs, defStyle) {
         //_scaleType = ScaleType.FIT_CENTER
 
-        //minScale = 1f
         //maxScale = 7f
         superMinScale = SUPER_MIN_MULTIPLIER * minScale
         superMaxScale = SUPER_MAX_MULTIPLIER * maxScale
@@ -136,10 +136,24 @@ class ZoomableImageView: AppCompatImageView {
         orientation = resources.configuration.orientation
         scaleDetector = ScaleGestureDetector(ctx, ScaleListener())
         gestureDetector = GestureDetector(ctx, GestureListener())
-        //this._context = ctx
+
+        if (attrs != null) {
+            val ta = ctx.obtainStyledAttributes(attrs, R.styleable.ZoomableImageView)
+            margin = ta.getDimension(R.styleable.ZoomableImageView_margin, 0f)
+            logd("margin $margin")
+            ta.recycle()
+        }
+        //minScale = 1f
         configureImageView()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    private fun configureImageView() {
+        super.setClickable(true)
+        imageMatrix = _matrix
+        scaleType = ScaleType.MATRIX
+        super.setOnTouchListener(PrivateOnTouchListener())
+    }
     fun mapRect(src: RectF, dst: RectF) {
         // the order weirdly is (dst, src)
         _matrix.mapRect(dst, src)
@@ -166,14 +180,6 @@ class ZoomableImageView: AppCompatImageView {
         dst.x = (src.x-tx)/s
         dst.y = (src.y-ty)/s
         //logd("a ${p.x.format(1)}, ${p.y.format(1)}")
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun configureImageView() {
-        super.setClickable(true)
-        imageMatrix = _matrix
-        scaleType = ScaleType.MATRIX
-        super.setOnTouchListener(PrivateOnTouchListener())
     }
 
     override fun setOnTouchListener(l: OnTouchListener?) {
@@ -346,7 +352,7 @@ class ZoomableImageView: AppCompatImageView {
      * @return current zoom multiplier.
      */
     val currentZoom get() = normalizedScale
-
+    /*
     /**
      * Set the min zoom multiplier. Default value: 1.
      *
@@ -354,7 +360,9 @@ class ZoomableImageView: AppCompatImageView {
      */
     fun setMinZoom(min: Float) {
         userSpecifiedMinScale = min
+        logd("set min zoom")
         if (min == AUTOMATIC_MIN_ZOOM) {
+            logd("margin thing $margin")
             if (_scaleType == ScaleType.CENTER || _scaleType == ScaleType.CENTER_CROP) {
                 val drawableWidth = drawable.intrinsicWidth
                 val drawableHeight = drawable.intrinsicHeight
@@ -374,13 +382,14 @@ class ZoomableImageView: AppCompatImageView {
             minScale = userSpecifiedMinScale
         }
         superMinScale = SUPER_MIN_MULTIPLIER * minScale
-    }
+    }*/
 
     /**
      * Reset zoom and translation to initial state.
      */
     fun resetZoom() {
-        normalizedScale = 1f
+        logd("resetZoom() $minScale, $margin")
+        normalizedScale = minScale //1f
         fitImageToView()
     }
 
@@ -418,12 +427,13 @@ class ZoomableImageView: AppCompatImageView {
             delayedZoomVariables = ZoomVariables(scale, focusX, focusY, scaleType)
             return
         }
+        /*
         if (userSpecifiedMinScale == AUTOMATIC_MIN_ZOOM) {
             setMinZoom(AUTOMATIC_MIN_ZOOM)
             if (normalizedScale < minScale) {
                 normalizedScale = minScale
             }
-        }
+        }*/
 
         if (scaleType != _scaleType) {
             setScaleType(scaleType)
@@ -587,6 +597,15 @@ class ZoomableImageView: AppCompatImageView {
         //
         viewWidth = w
         viewHeight = h
+
+        //if (margin >= 0f) {
+        minScale = (w - 2*margin) / w
+        logd("sz: $w, $h, $oldw, $oldh")
+        logd("updated with minscale? $minScale $currentZoom")
+        if (currentZoom <= 1f && margin != 0f) {
+            normalizedScale = 1f
+            logd("resetZoom")
+        }
         fitImageToView()
     }
 
@@ -620,13 +639,13 @@ class ZoomableImageView: AppCompatImageView {
         if (_matrix == null || prevMatrix == null) {
             return
         }
-
+        /*
         if (userSpecifiedMinScale == AUTOMATIC_MIN_ZOOM) {
             setMinZoom(AUTOMATIC_MIN_ZOOM)
             if (normalizedScale < minScale) {
                 normalizedScale = minScale
             }
-        }
+        }*/
 
         val drawableWidth = drawable.intrinsicWidth
         val drawableHeight = drawable.intrinsicHeight
@@ -1114,7 +1133,7 @@ class ZoomableImageView: AppCompatImageView {
         val origH = drawable.intrinsicHeight
         val px = bx / origW
         val py = by / origH
-        val finalX = m[Matrix.MTRANS_X] + imageWidth* px
+        val finalX = m[Matrix.MTRANS_X] + imageWidth * px
         val finalY = m[Matrix.MTRANS_Y] + imageHeight * py
         return PointF(finalX, finalY)
     }
