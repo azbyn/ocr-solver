@@ -13,7 +13,6 @@ class CropOverlay : BaseRoiOverlay {
     override val roi = CvRect()
     private val density = resources.displayMetrics.density
 
-
     private val grayPaint: Paint = Paint().apply {
         strokeWidth = 0f
         color = GRAYED_OUT_COLOR
@@ -36,7 +35,10 @@ class CropOverlay : BaseRoiOverlay {
         super.reset()
     }
 
-    override fun onDraw(canvas: Canvas, screenRect: RectF) {
+    private val screenRect = RectF()
+
+    override fun onDrawImpl(canvas: Canvas) {
+        imageView?.mapRect(rect, screenRect)
         linePaint.strokeWidth = 2f * density * (imageView?.currentZoom?:1f)
         val w = width.toFloat()
         val h = height.toFloat()

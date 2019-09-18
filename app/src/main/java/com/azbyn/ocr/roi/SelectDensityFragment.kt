@@ -9,6 +9,7 @@ import com.azbyn.ocr.*
 import com.azbyn.ocr.Misc.logd
 import com.azbyn.ocr.Misc.whyIsThisCalled
 import kotlinx.android.synthetic.main.select_density.*
+import org.json.JSONObject
 import org.opencv.core.Mat
 import org.opencv.core.Size
 import org.opencv.imgproc.Imgproc.INTER_AREA
@@ -27,6 +28,7 @@ class SelectDensityFragment: DumbSlidersFragment(
         }
 
     override fun viewModelInit() = viewModel.init(this)
+    override fun saveData(path: String) = viewModel.saveData()
 
     override fun initImpl() {
         imageView.resetZoom()
@@ -76,6 +78,10 @@ class SelectDensityFragment: DumbSlidersFragment(
         val defaultDensity get() = inViewModel.resultDensity
         var resultDensity = 1
             private set
+
+        fun saveData() = JSONObject().apply {
+            put("resultDensity", resultDensity)
+        }
 
         fun getString(context: Context) =
                 context.getString(R.string.select_density_text,

@@ -10,6 +10,7 @@ import android.widget.ImageView
 import com.azbyn.ocr.Misc.logd
 import com.azbyn.ocr.capture.CaptureFragment
 import kotlinx.android.synthetic.main.accept.*
+import org.json.JSONObject
 import org.opencv.core.CvType.CV_64FC1
 import org.opencv.core.Mat
 import org.opencv.core.Point
@@ -22,8 +23,9 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class AcceptFragment : ImageViewFragment() {
-    override val nextFragment = FragmentIndex.SELECT_ROI
     override val prevFragment = FragmentIndex.CAPTURE
+    override val nextFragment = FragmentIndex.SELECT_ROI
+
     override fun getImageView(): ImageView = imageView
 
     private val viewModel: VM by viewModelDelegate()
@@ -33,14 +35,20 @@ class AcceptFragment : ImageViewFragment() {
                               savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.accept, container, false)
 
+    override fun saveData(path: String): JSONObject? {
+        imwrite("$path/$IMAGE_FILE_NAME", viewModel.resultMat)
+        return viewModel.saveData()
+    }
+
+    override fun onOK() {
+        viewModel.onOK()
+        super.onOK()
+    }
+
     override fun initImpl(isOnBack: Boolean) {
         viewModel.init(this)
         imageView.resetZoom()
         setImagePreview(viewModel.resultMat)
-    }
-    override fun onOK() {
-        viewModel.writeMatAsync(mainActivity.lastFilePath)
-        super.onOK()
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,38 +58,47 @@ class AcceptFragment : ImageViewFragment() {
         crop.setOnClickListener { setCurrent(FragmentIndex.CROP) }
         ok.setOnClickListener { onOK() }
         fastForward.setOnClickListener {
-            fragmentManager.fastForwardTo(FragmentIndex.ACCEPT_DENSITY) {
-                viewModel.writeMatAsync(mainActivity.lastFilePath)
-            }
+            fragmentManager.fastForwardTo(FragmentIndex.ACCEPT_DENSITY)
         }
         feelingLucky.setOnClickListener {
-            fragmentManager.fastForwardTo(FragmentIndex.FINAL, msg="Felt lucky for") {
-                viewModel.writeMatAsync(mainActivity.lastFilePath)
-            }
+            fragmentManager.fastForwardTo(FragmentIndex.FINAL, msg="Felt lucky for")
         }
     }
 
+
     class VM : BaseViewModel() {
         val resultMat get() = getViewModel<CaptureFragment.VM>().mat
-
-        fun writeMatAsync(path: String) {
-            /*
-            AsyncTask.execute {
-                val t = measureTimeSec {
-                    imwrite(path, resultMat)
-                }
-                logd("wrote img done in $t")
-            }*/
+        private val history = arrayListOf<String>()
+        private var changedTimestamp = false
+        fun clearHistory() {
+            logd("cleared")
+            history.clear()
         }
+        fun onOK() {
+            logd("changed: $changedTimestamp")
+            if (!changedTimestamp && history.size != 0) {
+                getViewModel<CaptureFragment.VM>().setTimeStampNow()
+                changedTimestamp = true
+            }
+        }
+        fun saveData() = JSONObject().apply {
+            put("history", history)
+        }
+
         fun crop(ctx: Context, roi: CvRect) {
             ctx.tryOrComplain {
+                history.add("Crop $roi")
+                logd("$history")
                 resultMat.submat(roi).copyTo(resultMat)
             }
         }
         fun rotate(ctx: Context, angle: Double, isHorizontal: Boolean) {
-            val w = resultMat.width().toDouble()
-            val h = resultMat.height().toDouble()
+            if (angle == 0.0) return
             ctx.tryOrComplain {
+                history.add("rotate: $angle")
+                logd("$history")
+                val w = resultMat.width().toDouble()
+                val h = resultMat.height().toDouble()
                 if (isHorizontal) {
                     // More info about the math involved:
                     // https://docs.opencv.org/4.1.0/d4/d61/tutorial_warp_affine.html

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.azbyn.ocr.Misc.logd
+import org.json.JSONObject
 import kotlin.reflect.KProperty
 
 abstract class DumbViewModel: ViewModel() {
@@ -42,28 +43,31 @@ abstract class BaseViewModel: DumbViewModel() {
 }
 
 abstract class BaseFragment : Fragment() {
+    val className: String get() {
+        val full = this::class.java.name
+        return full.substring(full.lastIndexOf('.')+1)
+    }
     private val fragmentIndex: FragmentIndex by lazy {
         //logd("I am :${this::class.java.name}")
         FragmentIndex.get(this::class.java)
     }
     open val nextFragment: FragmentIndex = fragmentIndex.next()
     open val prevFragment: FragmentIndex = fragmentIndex.prev()
+
     val viewModelProvider: ViewModelProvider by lazy {
         ViewModelProvider(mainActivity, ViewModelProvider.NewInstanceFactory())
                 //ViewModelProvider.AndroidViewModelFactory(mainActivity.application))
     }
+
     class ViewModelDelegate<T: DumbViewModel>(val c: Class<T>) {
         //private var value: T? = null
         operator fun getValue(thisRef: BaseFragment, property: KProperty<*>): T {
             val res = thisRef.viewModelProvider[c]
             res.quickInit(thisRef)
             return res
-            //if (value == null) value = thisRef.viewModelProvider[c]
-            //ViewModelProviders.of(thisRef.mainActivity)[c]
-            //return value!!
         }
     }
-    inline fun <reified T : DumbViewModel> viewModelDelegate(): ViewModelDelegate<T>
+    inline fun <reified T : DumbViewModel>viewModelDelegate(): ViewModelDelegate<T>
             = ViewModelDelegate(T::class.java)
 
     inline fun <reified T : DumbViewModel>getViewModel(): T = viewModelProvider[T::class.java]
@@ -111,24 +115,29 @@ abstract class BaseFragment : Fragment() {
         initImpl(isOnBack)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    final override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (shouldInit) init(isOnBack=false)
     }
 
+    @CallSuper
     open fun onBack() = setCurrent(prevFragment, isOnBack=true)
     @CallSuper
     open fun onOK() = setCurrent(nextFragment, isOnBack=false)
 
     protected abstract fun initImpl(isOnBack: Boolean)
+
+    abstract fun saveData(path: String): JSONObject?
+    //open fun saveData(path: String): JSONObject? = null
+
     open fun lightCleanup() = Unit
 
-    override fun onAttach(context: Context) {
+    final override fun onAttach(context: Context) {
         super.onAttach(context)
         _mainActivity = context as MainActivity
     }
 
-    override fun onDetach() {
+    final override fun onDetach() {
         super.onDetach()
         _mainActivity = null
     }

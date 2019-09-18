@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.azbyn.ocr.*
 import kotlinx.android.synthetic.main.crop.*
+import org.json.JSONObject
 
 class CropFragment : ImageViewFragment() {
     override val nextFragment = FragmentIndex.ACCEPT
@@ -32,6 +33,7 @@ class CropFragment : ImageViewFragment() {
         //rotateViewer.overlay = overlay
         //overlay.rotateViewer = rotateViewer
     }
+    override fun saveData(path: String): JSONObject? = null
 
     override fun onOK() {
         viewModel.crop(mainActivity, overlay.roi)

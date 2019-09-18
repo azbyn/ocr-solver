@@ -140,7 +140,7 @@ class ZoomableImageView: AppCompatImageView {
         if (attrs != null) {
             val ta = ctx.obtainStyledAttributes(attrs, R.styleable.ZoomableImageView)
             margin = ta.getDimension(R.styleable.ZoomableImageView_margin, 0f)
-            logd("margin $margin")
+            //logd("margin $margin")
             ta.recycle()
         }
         //minScale = 1f

@@ -20,16 +20,8 @@
         style="@style/BottomBar"
         android:id="@+id/bottom">
 
-        <CheckedTextView
+        <CheckedTextView style="@style/CheckBox"
             android:id="@+id/autoRotate"
-            android:layout_width="@dimen/bottom_height"
-            android:layout_height="@dimen/bottom_height"
-            android:gravity="center"
-            android:drawableTop="@drawable/checkmark"
-            android:paddingTop="10dp"
-            android:textColor="#FFF"
-            android:buttonTint="#FFF"
-            android:textSize="@dimen/image_button_text_size"
             android:text="@string/auto_rotate"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

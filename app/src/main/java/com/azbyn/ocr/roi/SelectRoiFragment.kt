@@ -9,6 +9,7 @@ import com.azbyn.ocr.*
 import kotlinx.android.synthetic.main.select_roi.roiText
 import kotlinx.android.synthetic.main.select_roi.imageView
 import kotlinx.android.synthetic.main.select_roi.overlay
+import org.json.JSONObject
 import org.opencv.core.Mat
 import org.opencv.core.Rect
 import kotlin.math.max
@@ -26,6 +27,8 @@ class SelectRoiFragment: ImageViewFragment() {
                               container: ViewGroup?,
                               savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.select_roi, container, false)
+
+    override fun saveData(path: String) = viewModel.saveData()
 
     override fun initImpl(isOnBack: Boolean) {
         viewModel.init(inViewModel.resultMat, isOnBack)
@@ -66,6 +69,12 @@ class SelectRoiFragment: ImageViewFragment() {
         val roi = Rect()
         var resultMat = Mat()
             private set
+
+
+        fun saveData() = JSONObject().apply {
+            put("roi", roi)
+        }
+
 
         fun fastForward(prev: Mat) {
             init(prev, isOnBack=false)

@@ -51,6 +51,8 @@ enum class FragmentIndex(private val clazz: Class<*>) {
     BLOB_MASK1(BlobMask1Fragment::class.java),
     BLOB_MASK2(BlobMask2Fragment::class.java),
     BLOBBING(BlobbingFragment::class.java),
+
+    RESULT(ResultFragment::class.java)
     ;
     fun newInstance(): BaseFragment = clazz.newInstance() as BaseFragment
     fun prev() : FragmentIndex {
@@ -62,10 +64,10 @@ enum class FragmentIndex(private val clazz: Class<*>) {
         else values[ordinal + 1]
     }
     companion object {
-        val FINAL = BLOBBING
-
         val values = values()
         val LEN = values.size
+        val FINAL = values[LEN-1]
+
         private val indexMap = mutableMapOf<Class<*>, FragmentIndex>()
         fun get(clazz: Class<*>): FragmentIndex = indexMap[clazz]!!
         //fun fromInt(int: Int) = values[int]
@@ -115,24 +117,21 @@ class FragmentManagerAdapter(fm: FragmentManager, private val viewPager: NoSwipe
     }
 
     private var pendingFastForward = false
+/*
+    fun fastForwardTo(to: FragmentIndex, msg: String = "Done in") = fastForwardTo(to, msg) {}
+    fun fastForwardTo(to: FragmentIndex, after: () -> Unit) = fastForwardTo(to, "Done in", after)*/
 
-    fun fastForwardTo(to: FragmentIndex, msg: String = "Done in") {
-        fastForwardTo(to, msg) {}
-    }
+    // TODO add file 'last.txt' with last folder, and use that for use saved
+    // and gray it out if it doesn't exist
 
-    fun fastForwardTo(to: FragmentIndex, after: () -> Unit) {
-        fastForwardTo(to, "Done in", after)
-    }
-
-    // TODO Reset zoom on init(!isBack)
-    // TODO crop
+    // TODO saveData() in viewModel (async?)
 
     // TODO add AcceptBlobsFragment \w seeing individual blobs and removal?
-    // TODO ResultFragment \w save icon
-    // TODO saveData() in viewModel (at the end and async?) (save icon)
+
     // TODO left-swipe list of fragments selector
     // TODO crash data with images saved etc.
-    fun fastForwardTo(to: FragmentIndex, msg: String, after: () -> Unit) {
+
+    fun fastForwardTo(to: FragmentIndex, msg: String = "Done in" /*, after: () -> Unit*/) {
         //logd("pending? $pendingFastForward")
         if (pendingFastForward) return
         if (currentIndex == to) return
@@ -150,7 +149,7 @@ class FragmentManagerAdapter(fm: FragmentManager, private val viewPager: NoSwipe
                     fi = f.nextFragment
                 }
             }
-            after()
+            //after()
             logd("$msg ${t}s.")
             frag.showToast("$msg ${t}s.")
 

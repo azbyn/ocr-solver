@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    style="@style/BaseLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout style="@style/TopBar"
+        android:id="@+id/top">
+
+        <ImageButton style="@style/ImageButton"
+            android:id="@+id/back"
+            android:src="@drawable/ic_back"/>
+
+        <TextView style="@style/TopText"
+            android:id="@+id/textView"
+            android:layout_toEndOf="@+id/back"
+            android:text="@string/result" />
+
+        <!--android:layout_marginEnd="10dp"-->
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/BottomBar"
+        android:layout_height="60dp"
+        android:id="@+id/bottom">
+<!--
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/middle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="206dp" />
+        <Button style="@style/Button"
+            android:id="@+id/feelingLucky"
+            android:text="@string/feeling_lucky"
+
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/middle" />
+        <Button style="@style/Button"
+            android:id="@+id/fastForward"
+            android:text="@string/fastForward"
+
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/middle"/>
+-->
+
+        <CheckedTextView style="@style/CheckBox"
+            android:id="@+id/wasGood"
+            android:text="Was good"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button style="@style/BtnImage"
+            android:id="@+id/newPhoto"
+            android:background="@drawable/ic_image_small"
+            android:text="@string/new_photo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button style="@style/BtnImage"
+            android:id="@+id/save"
+            android:background="@drawable/ic_save_small"
+            android:text="@string/save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="#FFF"
+        android:text="Work in progress"
+        android:gravity="center"
+        android:textSize="30pt"
+        android:layout_above="@+id/bottom"
+        android:layout_below="@+id/top"/>
+
+</RelativeLayout>

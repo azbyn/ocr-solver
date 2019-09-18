@@ -8,9 +8,10 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.annotation.CallSuper
+import org.json.JSONObject
 
 class SliderData(val name: String, var default: Int,
-                 val min: Int=0, var max: Int=100,
+                 val min: Int = 0, var max: Int = 100,
                  val stepSize: Int = 1,
                  //show float displays the value as a decimal
                  private val showFloat: Boolean = false)  {
@@ -50,6 +51,7 @@ abstract class SlidersViewModel: BaseViewModel() {
         logd("$className: $t")
     }
     abstract fun update(frag: ImageViewFragment, p: IntArray)
+
     @CallSuper
     protected open fun update(p: IntArray) {
         for ((i, prog) in p.withIndex()) {
@@ -57,11 +59,17 @@ abstract class SlidersViewModel: BaseViewModel() {
         }
     }
     open fun cleanup() = Unit
+
+    fun saveData(sliderDatas: Array<SliderData>) = JSONObject().apply {
+        for ((i, sd) in sliderDatas.withIndex()) {
+            put(sd.name, lastValues[i])
+        }
+    }
 }
 
 //this assumes the layout elements are named like this: <whaterer>1, <whatever>2 ...
 abstract class DumbSlidersFragment(
-        private val sliderDatas: Array<SliderData>,
+        protected val sliderDatas: Array<SliderData>,
         private val layout: Int
 ) : ImageViewFragment(), SeekBar.OnSeekBarChangeListener {
     constructor(sd1: SliderData, sd2: SliderData, sd3: SliderData) :
@@ -221,7 +229,8 @@ abstract class BaseSlidersFragment : DumbSlidersFragment {
     @CallSuper
     override fun updateImpl(p: IntArray) = viewModel.update(this, p)
 
-    override fun fastForwardImpl(p: IntArray) = viewModel.fastForward(this, p)
+    final override fun fastForwardImpl(p: IntArray) = viewModel.fastForward(this, p)
+    final override fun saveData(path: String) = viewModel.saveData(sliderDatas)
 
     @CallSuper
     override fun lightCleanup() = viewModel.cleanup()

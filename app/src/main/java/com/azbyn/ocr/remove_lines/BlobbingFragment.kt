@@ -16,14 +16,14 @@ class BlobbingFragment : BaseSlidersFragment(
 
     override val viewModel: VM by viewModelDelegate()
     override val topBarName: String get() = "Blobbing"//mainActivity.getString(R.string.threshold)
-
+    /*
     override fun onOK() {
         //logd("wrote lines")
         //imwrite("${mainActivity.path}/final.jpg", getViewModel<FinalThresholdFragment.VM>().resultMat)
         imwrite("${mainActivity.path}/blobs2.jpg", getViewModel<BlobMask2Fragment.VM>().resultMat)
         showToast("SAVED final.jpg")
         super.onOK()
-    }
+    }*/
 
     class VM : SlidersViewModel() {
         private val maskMat get() = getViewModel<BlobMask2Fragment.VM>().resultMat

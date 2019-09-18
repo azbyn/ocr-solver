@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.azbyn.ocr.*
 import kotlinx.android.synthetic.main.rotate.*
+import org.json.JSONObject
 
 class RotateFragment : ImageViewFragment() {
     override val nextFragment = FragmentIndex.ACCEPT
@@ -31,6 +32,9 @@ class RotateFragment : ImageViewFragment() {
         rotateViewer.overlay = overlay
         overlay.rotateViewer = rotateViewer
     }
+
+    override fun saveData(path: String): JSONObject? = null
+
     override fun initImpl(isOnBack: Boolean) {
         setImagePreview(viewModel.resultMat)
         imageView.runWhenInitialized {

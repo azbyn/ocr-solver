@@ -20,12 +20,6 @@ class SelectDensityOverlay : BaseOverlay {
 
     private var firstX = 0f
     private var firstY = 0f
-    /*private val r = RectF()
-    private val paint2: Paint = Paint().apply {
-        style = Paint.Style.FILL
-        color = 0x7F_00_00_FF//.toInt()
-    }*/
-
 
     private val paint: Paint = Paint().apply {
         color = 0xA0_00_FF_00.toInt()
@@ -33,6 +27,9 @@ class SelectDensityOverlay : BaseOverlay {
     }
 
     private var halfSize = 0f
+
+    private val rect = RectF()
+    private val screenRect = RectF()
 
     constructor(ctx: Context) : super(ctx)
     constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs)
@@ -63,11 +60,6 @@ class SelectDensityOverlay : BaseOverlay {
     }
 
     val p = PointF()
-    /*
-    override fun update() {
-        this.imageView?.screenToDrawable(p)
-        super.update()
-    }*/
 
     fun reset(density: Int) {
         pos.x = this.matWidth / 2f
@@ -115,12 +107,11 @@ class SelectDensityOverlay : BaseOverlay {
             }
             else -> return false
         }
-        // prevX = p.x
-        // prevY = p.y
-        //return true
     }
 
-    override fun onDraw(canvas: Canvas, screenRect: RectF) {
+
+    override fun onDrawImpl(canvas: Canvas) {
+        imageView?.mapRect(rect, screenRect)
         canvas.drawRect(screenRect, paint)
         /*
         val scale = imageView?.matrixScale ?: 1f

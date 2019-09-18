@@ -34,6 +34,7 @@ abstract class BaseRoiOverlay : BaseOverlay {
     protected var matHeight = 0
         private set
 
+    protected val rect = RectF()
     abstract val roi : CvRect//()
 
     private var pressType = PT_NONE
@@ -62,7 +63,6 @@ abstract class BaseRoiOverlay : BaseOverlay {
         rect.bottom = (roi.y + roi.height).toFloat()
         super.update()
     }
-
 
     @CallSuper
     open fun reset() { update() }

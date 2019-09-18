@@ -65,13 +65,6 @@ class MainActivity : AppCompatActivity() {
     }
     */
 
-    /*
-    override fun onDestroy() {
-        logd("MainActivity.onDestroy")
-        super.onDestroy()
-    }
-    */
-
     override fun onBackPressed() = fragmentManager.onBack()
 
     companion object {

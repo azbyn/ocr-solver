@@ -14,8 +14,8 @@ abstract class BaseOverlay : View, ZoomableImageView.OnDrawListener, View.OnTouc
     constructor(ctx: Context) : super(ctx)
     constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs)
 
-    @SuppressLint("ClickableViewAccessibility")
     @CallSuper
+    @SuppressLint("ClickableViewAccessibility")
     open fun init(drawableWidth: Int, drawableHeight: Int, imageView: ZoomableImageView) {
         this.imageView = imageView
         imageView.addOnDrawListener(this)
@@ -34,22 +34,11 @@ abstract class BaseOverlay : View, ZoomableImageView.OnDrawListener, View.OnTouc
     abstract fun onTouchImpl(event: MotionEvent): Boolean
 
     @CallSuper
-    /*final */override fun update() = invalidate()
+    override fun update() = invalidate()
 
-    protected val rect = RectF(0f, 0f, 50f, 50f)
-    protected fun setRect(l: Float, t: Float, r: Float, b: Float) {
-        rect.left = l
-        rect.top = t
-        rect.right = r
-        rect.bottom = b
-    }
-    private val screenRect = RectF()
-
-    @SuppressLint("WrongCall")
     final override fun onDraw(canvas: Canvas) {
         imageView ?: return
-        imageView?.mapRect(rect, screenRect)
-        onDraw(canvas, screenRect)
+        onDrawImpl(canvas)
     }
-    abstract fun onDraw(canvas: Canvas, screenRect: RectF)
+    abstract fun onDrawImpl(canvas: Canvas)
 }

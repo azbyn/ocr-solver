@@ -46,4 +46,7 @@
     <string name="remove_lines">Remove Lines</string>
     <string name="feeling_lucky">I\'m Feeling Lucky</string>
     <string name="auto_rotate">Auto rotate</string>
+    <string name="result">Result</string>
+    <string name="new_photo">New Photo</string>
+    <string name="save">Save</string>
 </resources>

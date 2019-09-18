@@ -79,7 +79,7 @@ public:
         LOGD("a (%.1f %.1f)", p.x(), p.y());
         //p.setY((t1-t2) / delta);
         //LOGD("0? (%f %f %f %f)", val[0], val[1], val[3], val[4]);
-        /*
+        / *
         Point3 res = { 0, 0, 0 };
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
@@ -98,7 +98,7 @@ JNIFUN(void, matrixScreenToDrawable)(JNIEnv* env, jobject, jfloatArray mat, jflo
     PointF p(env, vec);
     m.inverseMultiply(p);
 }
-/*
+/ *
 JNIFUN(void, matrixDrawableToScreen)(JNIEnv* env, jobject, jfloatArray mat, PointF_t vec) {
     Matrix m(env->GetFloatArrayElements(mat, nullptr));
     PointF p(env, vec);

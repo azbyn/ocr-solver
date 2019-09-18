@@ -23,11 +23,14 @@ import androidx.core.app.ActivityCompat
 import com.azbyn.ocr.*
 import com.azbyn.ocr.Misc.logw
 import kotlinx.android.synthetic.main.capture.*
+import org.json.JSONObject
 import org.opencv.core.Core.*
 import org.opencv.core.Mat
 import org.opencv.imgcodecs.Imgcodecs.*
+import java.io.File
 
 import java.lang.System.currentTimeMillis
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
@@ -41,12 +44,22 @@ class CaptureFragment : BaseFragment(),
     class VM: DumbViewModel() {
         var mat = Mat()
             private set
+        var timestamp = ""
+            private set
+        private val formater = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS", Locale.GERMANY)
+
+        fun getTimeStampNow() = formater.format(Calendar.getInstance().time)
+        fun setTimeStampNow() {
+            timestamp = getTimeStampNow()
+        }
+
         fun initFromImage(img: Image, rotation: Int) {
+            setTimeStampNow()
+
             // this is very fast but it's not true grayscale (1/3 R, 1/3 G, 1/3 B)
             // but is (0.299 R, 0.578 G, 0.114 B)
             // for our purposes (taking pictures of paper that's already almost grayscale)
             // this is useful since it makes blue (most common pen color) darker
-
             val buffer = img.planes[0].buffer
             val data = ByteArray(buffer.capacity())
             buffer.get(data)
@@ -76,7 +89,13 @@ class CaptureFragment : BaseFragment(),
             mat.put(0, 0, byteArray)
             */
         }
-        fun initFromPath(path: String) {
+        fun initFromPath(frag: BaseFragment, path: String) {
+            val f = File(path)
+            if (!f.exists()) {
+                frag.loge("File '$path' not found")
+                return
+            }
+            timestamp = formater.format(Date(f.lastModified()))
             mat = imread(path, IMREAD_GRAYSCALE)
             //bitmap = BitmapFactory.decodeFile(mainActivity.lastFilePath)
         }
@@ -85,8 +104,14 @@ class CaptureFragment : BaseFragment(),
         }
     }
 
-    //override val nextFragment = FragmentIndex.ACCEPT
-    override val nextFragment = FragmentIndex.CROP
+    override fun onOK() {
+        getViewModel<AcceptFragment.VM>().clearHistory()
+        super.onOK()
+    }
+
+    override val nextFragment = FragmentIndex.ACCEPT
+    override fun saveData(path: String): JSONObject? = null
+
     private val viewModel: VM by viewModelDelegate()
 
     @Suppress("UNUSED_PARAMETER")
@@ -307,10 +332,7 @@ class CaptureFragment : BaseFragment(),
 
             logd("time $dt (in listener $beginDt)")
             showToast("Done $dt")
-            mainActivity.runOnUiThread {
-                //logd("bitmap thread ui $bitmap")
-                setCurrent(nextFragment)
-            }
+            mainActivity.runOnUiThread { onOK() }
         }
         /*
         backgroundHandler?.post(ImageSaver(image/*it.acquireNextImage()*/, file))
@@ -434,7 +456,7 @@ class CaptureFragment : BaseFragment(),
     private lateinit var sensorManager : SensorManager
     private var rotSensor: Sensor? = null
 
-    override fun onBack() = Unit
+    //override fun onBack() = Unit
     override fun initImpl(isOnBack: Boolean) {
         startBackgroundThread()
         openCamera()
@@ -484,8 +506,8 @@ class CaptureFragment : BaseFragment(),
         picture.setOnClickListener { takePicture() }
         calibrate.setOnClickListener { angleIndicator.calibrate() }
         useSaved.setOnClickListener {
-            viewModel.initFromPath(mainActivity.lastFilePath)
-            setCurrent(nextFragment)
+            viewModel.initFromPath(this, mainActivity.lastFilePath)
+            onOK()
         }
         flash.setOnClickListener {
             flashEnabled = !flashEnabled

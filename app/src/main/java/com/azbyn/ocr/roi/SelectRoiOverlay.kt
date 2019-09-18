@@ -37,7 +37,9 @@ class SelectRoiOverlay : BaseRoiOverlay {
         super.update()
     }
 
-    override fun onDraw(canvas: Canvas, screenRect: RectF) {
+    private val screenRect = RectF()
+    override fun onDrawImpl(canvas: Canvas) {
+        imageView?.mapRect(rect, screenRect)
         paint.strokeWidth = 2f * density * (imageView?.currentZoom?:1f)
         canvas.drawRect(screenRect, paint)
     }

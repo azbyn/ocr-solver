@@ -25,7 +25,7 @@ class RotateOverlay : View {
     private val linePaint: Paint = Paint().apply {
         strokeWidth = density
         //color = 0xA0_FF_FF_FF.toInt()
-        color = 0xA0_39_71_ED.toInt() //00_00_FF.toInt()
+        color = 0xA0_39_71_ED.toInt()
     }
 
     private data class MatrixData(var scale: Float = 0f,
