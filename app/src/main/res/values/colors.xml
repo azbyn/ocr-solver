@@ -26,4 +26,5 @@
     <color name="background">#1D1F21</color>
     <color name="buttonBackground">#373B41</color>
     <color name="grayedOut">#666</color>
+    <color name="default_">#FFF</color>
 </resources>

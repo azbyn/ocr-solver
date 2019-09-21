@@ -20,8 +20,10 @@ import android.util.Size
 import android.view.*
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.azbyn.ocr.*
 import com.azbyn.ocr.Misc.logw
+import com.azbyn.ocr.Misc.whyIsThisCalled
 import kotlinx.android.synthetic.main.capture.*
 import org.json.JSONObject
 import org.opencv.core.Core.*
@@ -41,19 +43,45 @@ import kotlin.math.sqrt
 
 class CaptureFragment : BaseFragment(),
         ActivityCompat.OnRequestPermissionsResultCallback {
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun logd(s: String) = Misc.logd(s, offset=1)
+
     class VM: DumbViewModel() {
         var mat = Mat()
             private set
         var timestamp = ""
             private set
         private val formater = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS", Locale.GERMANY)
+        private var lastFile: File? = null
 
-        fun getTimeStampNow() = formater.format(Calendar.getInstance().time)
+        fun init(mainActivity: MainActivity): Boolean {
+            lastFile = null
+            val f = File(mainActivity.path, "last.txt")
+            //logd("exists ${f.exists()}")
+            if (!f.exists()) return false
+            val dirPath = f.readText().trim()
+            val dirFile = File(mainActivity.path, dirPath)
+            //logd("path '$dirFile'")
+            //logd("exists2 ${dirFile.exists()}")
+            if (!dirFile.exists()) return false
+            lastFile = dirFile
+            return true
+        }
+        fun saveLast(mainActivity: MainActivity) {
+            lastFile = File("${mainActivity.path}/$timestamp", IMAGE_FILE_NAME)
+            logd("Oida, saved $lastFile")
+            val f = File(mainActivity.path, "last.txt")
+            f.writeText("$timestamp/$IMAGE_FILE_NAME")
+        }
+
+        fun getTimeStampNow(): String = formater.format(Calendar.getInstance().time)
         fun setTimeStampNow() {
             timestamp = getTimeStampNow()
         }
 
-        fun initFromImage(img: Image, rotation: Int) {
+        fun fromImage(img: Image, rotation: Int) {
+            logd("Oida, fromImage")
             setTimeStampNow()
 
             // this is very fast but it's not true grayscale (1/3 R, 1/3 G, 1/3 B)
@@ -77,27 +105,17 @@ class CaptureFragment : BaseFragment(),
                 180 -> rotate(mat, mat, ROTATE_180)
                 270 -> rotate(mat, mat, ROTATE_90_COUNTERCLOCKWISE)
             }
-
-
-            //((ByteBuffer) frame.duplicate().clear()).get(data);
-            /*val size = bitmap.rowBytes * bitmap.height
-            val byteBuffer = ByteBuffer.allocate(size)
-            logd("size = $size")
-            bitmap.copyPixelsToBuffer(byteBuffer)
-            val byteArray = byteBuffer.array()
-            val mat = Mat(w, h, CvType.CV_8UC4)
-            mat.put(0, 0, byteArray)
-            */
         }
-        fun initFromPath(frag: BaseFragment, path: String) {
-            val f = File(path)
-            if (!f.exists()) {
-                frag.loge("File '$path' not found")
-                return
+        fun fromPath(frag: BaseFragment): Boolean {
+            logd("Oida, fromPath $lastFile")
+            lastFile ?: return false
+            if (!lastFile!!.exists()) {
+                frag.loge("File '${lastFile!!.path}' not found")
+                return false
             }
-            timestamp = formater.format(Date(f.lastModified()))
-            mat = imread(path, IMREAD_GRAYSCALE)
-            //bitmap = BitmapFactory.decodeFile(mainActivity.lastFilePath)
+            timestamp = formater.format(Date(lastFile!!.lastModified()))
+            mat = imread(lastFile!!.path, IMREAD_GRAYSCALE)
+            return true
         }
         fun reset() {
             mat = Mat()//?
@@ -114,8 +132,6 @@ class CaptureFragment : BaseFragment(),
 
     private val viewModel: VM by viewModelDelegate()
 
-    @Suppress("UNUSED_PARAMETER")
-    private fun logd(s: String) = Unit// Misc.logd(s)
     private companion object {
         const val REQUEST_PERMISSIONS = 1
         val PERMISSIONS = arrayOf(
@@ -323,7 +339,7 @@ class CaptureFragment : BaseFragment(),
         logd("onImageAvailableListener $mainActivity")
         tryOrComplain {
             val timeBegin = currentTimeMillis()
-            viewModel.initFromImage(it.acquireNextImage(), orientation)
+            viewModel.fromImage(it.acquireNextImage(), orientation)
             logd("orientation: $orientation")
             toast?.cancel()
             val now = currentTimeMillis()
@@ -456,10 +472,22 @@ class CaptureFragment : BaseFragment(),
     private lateinit var sensorManager : SensorManager
     private var rotSensor: Sensor? = null
 
+    private fun setUseSavedColor(value: Boolean) {
+        fun impl(id: Int) {
+            val color = mainActivity.getColor(id)
+            val colorTint = ContextCompat.getColorStateList(mainActivity, id)
+            useSaved.backgroundTintList = colorTint
+            useSaved.setTextColor(color)
+        }
+        impl(if (value) R.color.default_ else R.color.grayedOut)
+    }
+
     //override fun onBack() = Unit
     override fun initImpl(isOnBack: Boolean) {
         startBackgroundThread()
         openCamera()
+        val res = viewModel.init(mainActivity)
+        setUseSavedColor(res)
 
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we should
@@ -483,6 +511,7 @@ class CaptureFragment : BaseFragment(),
 
     override fun onResume() {
         super.onResume()
+        logd("()")
         initImpl(isOnBack=false)
     }
 
@@ -506,8 +535,11 @@ class CaptureFragment : BaseFragment(),
         picture.setOnClickListener { takePicture() }
         calibrate.setOnClickListener { angleIndicator.calibrate() }
         useSaved.setOnClickListener {
-            viewModel.initFromPath(this, mainActivity.lastFilePath)
-            onOK()
+            if (!viewModel.fromPath(this)) {
+                setUseSavedColor(false)
+            } else {
+                onOK()
+            }
         }
         flash.setOnClickListener {
             flashEnabled = !flashEnabled
@@ -546,6 +578,9 @@ class CaptureFragment : BaseFragment(),
                 }
             }
         }
+        //logd("INIT")
+        //since this is the first fragment we should call init
+        //initImpl(isOnBack=false)
     }
 
     override fun onDestroyView() {
@@ -1199,4 +1234,3 @@ class CaptureFragment : BaseFragment(),
     private fun hitTimeoutLocked() =
             (SystemClock.elapsedRealtime() - captureTimer) > PRECAPTURE_TIMEOUT_MS
 }
-

@@ -96,6 +96,7 @@ class RotateOverlay : View {
         imageView.scaleType = ImageView.ScaleType.MATRIX
 
         imageView.imageMatrix = _matrix
+        invalidate()
     }
     private var prevA = 0f
     //only to be used from RotateViewer

@@ -2,7 +2,6 @@ package com.azbyn.ocr
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.AsyncTask
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.fragment.app.FragmentManager
@@ -32,6 +31,7 @@ enum class FragmentIndex(private val clazz: Class<*>) {
     ACCEPT(AcceptFragment::class.java),
     ROTATE(RotateFragment::class.java),
     CROP(CropFragment::class.java),
+
     SELECT_ROI(SelectRoiFragment::class.java),
     BLUR_ROI(BlurRoiFragment::class.java),
     EDIT_THRESHOLD_MAX(EditThresholdMaxFragment::class.java),
@@ -123,8 +123,6 @@ class FragmentManagerAdapter(fm: FragmentManager, private val viewPager: NoSwipe
 
     // TODO add file 'last.txt' with last folder, and use that for use saved
     // and gray it out if it doesn't exist
-
-    // TODO saveData() in viewModel (async?)
 
     // TODO add AcceptBlobsFragment \w seeing individual blobs and removal?
 

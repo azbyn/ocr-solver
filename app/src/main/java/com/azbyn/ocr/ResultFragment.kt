@@ -11,6 +11,7 @@ import org.json.JSONObject
 import java.io.File
 
 class ResultFragment : BaseFragment() {
+    override val nextFragment = FragmentIndex.CAPTURE
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?
@@ -20,6 +21,7 @@ class ResultFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         //logd("Accept.onViewCreated")
         back.setOnClickListener { onBack() }
+        newPhoto.setOnClickListener { onOK() }
         wasGood.setOnClickListener {
             wasGood.isChecked = !wasGood.isChecked
             //viewModel.update(this, autoRotate.isChecked)
@@ -66,6 +68,7 @@ class ResultFragment : BaseFragment() {
                 }
                 File(dir, "data.json").writeText(json.toString(4))
                 logd("$timestamp ${json.toString(4)}")
+                cf.saveLast(mainActivity)
             }
         }
         logd("saved in ${t}s")
