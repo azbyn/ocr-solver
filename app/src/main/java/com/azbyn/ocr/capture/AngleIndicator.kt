@@ -11,7 +11,7 @@ import android.util.Log
 import android.view.View
 import kotlin.math.*
 
-// TODO add this to AutoFitTextureView (fun onDraw(): super.onDraw(); ...)
+// TODO add this to CaptureTextureView (fun onDraw(): super.onDraw(); ...)
 
 
 data class Quaternion(val x: Float, val y: Float, val z: Float, val w: Float) {

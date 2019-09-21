@@ -23,7 +23,7 @@ import android.view.TextureView
 /**
  * A [TextureView] that can be adjusted to a specified aspect ratio.
  */
-class AutoFitTextureView @JvmOverloads constructor(
+class CaptureTextureView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0
@@ -41,9 +41,8 @@ class AutoFitTextureView @JvmOverloads constructor(
      * @param height Relative vertical size
      */
     fun setAspectRatio(width: Int, height: Int) {
-        if (width < 0 || height < 0) {
-            throw IllegalArgumentException("Size cannot be negative.")
-        }
+        require(!(width < 0 || height < 0)) { "Size cannot be negative." }
+
         ratioWidth = width
         ratioHeight = height
         requestLayout()

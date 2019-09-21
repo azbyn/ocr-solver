@@ -10,6 +10,7 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.AndroidViewModel
 import com.azbyn.ocr.Misc.fmtMsg
 import com.azbyn.ocr.Misc.logeImpl
+import com.azbyn.ocr.capture.CaptureTextureView
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.text.SimpleDateFormat
@@ -22,6 +23,9 @@ typealias CvRect = org.opencv.core.Rect
 const val DESIRED_DENSITY = 30
 const val GRAYED_OUT_COLOR: Int = 0xA0_00_00_00.toInt()
 const val IMAGE_FILE_NAME = "img.png"
+//shouldn't really matter
+val TIME_LOCALE: Locale = Locale.GERMANY
+
 fun Float.format(digits: Int=2) = "%.${digits}f".format(this)
 fun Double.format(digits: Int=2) = "%.${digits}f".format(this)
 
