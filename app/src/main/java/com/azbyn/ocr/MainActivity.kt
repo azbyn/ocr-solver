@@ -3,7 +3,7 @@ package com.azbyn.ocr
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.azbyn.ocr.Misc.logd
-import com.azbyn.ocr.Misc.logeSimple
+import com.azbyn.ocr.Misc.logwtf
 import org.opencv.android.OpenCVLoader
 
 class MainActivity : AppCompatActivity() {
@@ -15,23 +15,15 @@ class MainActivity : AppCompatActivity() {
         tryOrComplain {
             setContentView(R.layout.main_activity)
             fragmentManager = FragmentManagerAdapter(supportFragmentManager,
-                    findViewById(R.id.container))
-
-            //path = getExternalFilesDir(null)!!.path
-            if (savedInstanceState != null) {
-                logd("MainActivity.onCreate()")
-                val v = savedInstanceState.getInt("curr")
-                if (v >= 0 && v <= FragmentIndex.LEN) {
-                    fragmentManager.setCurrent(FragmentIndex.values[v], isOnBack=false)
-                }
-            } else {
-                logd("THE BEGINING <onCreate>")
+                    findViewById(R.id.container), savedInstanceState)
+            if (savedInstanceState == null) {
+                logd("THE BEGINNING <onCreate>")
             }
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("curr", fragmentManager.current)
+        fragmentManager.onSaveInstanceState(outState)
         super.onSaveInstanceState(outState)
     }
 
@@ -40,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         init {
             if (!OpenCVLoader.initDebug()) {
-                logeSimple("opencv initDebug failed")
+                logwtf("OpenCV initDebug failed")
             }
             System.loadLibrary("jni")
         }

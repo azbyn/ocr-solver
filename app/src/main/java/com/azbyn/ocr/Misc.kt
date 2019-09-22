@@ -57,6 +57,9 @@ object Misc {
         }
     }
 
+    fun logwtf(msg: String, e: Throwable? = null, offset: Int=0) =
+            Log.wtf(TAG, fmtMsg("WTF", msg, offset), e)
+
     fun logeImpl(ctx: Context, msg: String = "", e: Throwable? = null, offset: Int) {
         val st = e?.stackTrace?.get(0) ?: Thread.currentThread().stackTrace[5+offset]
         val className = st.className.substringAfterLast('.')

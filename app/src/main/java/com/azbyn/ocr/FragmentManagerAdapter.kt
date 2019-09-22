@@ -2,6 +2,7 @@ package com.azbyn.ocr
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.fragment.app.FragmentManager
@@ -79,10 +80,20 @@ enum class FragmentIndex(private val clazz: Class<*>) {
     }
 
 }
-class FragmentManagerAdapter(fm: FragmentManager, private val viewPager: NoSwipeViewPager) :
-        FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class FragmentManagerAdapter(
+        fm: FragmentManager,
+        private val viewPager: NoSwipeViewPager,
+        savedInstanceState: Bundle?
+) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+
     init {
         viewPager.adapter = this
+        if (savedInstanceState != null) {
+            val v = savedInstanceState.getInt("curr")
+            if (v >= 0 && v <= FragmentIndex.LEN) {
+                setCurrent(FragmentIndex.values[v], isOnBack = false)
+            }
+        }
     }
     companion object {
         private val fragments = Array<BaseFragment?>(FragmentIndex.LEN) { null }
@@ -96,16 +107,17 @@ class FragmentManagerAdapter(fm: FragmentManager, private val viewPager: NoSwipe
             fragments[index.ordinal] = frag
         }
     }
+    fun onSaveInstanceState(outState: Bundle) = outState.putInt("curr", current)
 
     override fun getItem(position: Int): BaseFragment = fragments[position]!!
     fun getItem(index: FragmentIndex) = getItem(index.ordinal)
 
     override fun getCount(): Int = FragmentIndex.LEN
-    val currentFragment
-        get() = fragments[viewPager.currentItem]
 
-    val current: Int get() = viewPager.currentItem
-    val currentIndex: FragmentIndex get() = FragmentIndex.values[current]
+    private val currentFragment get() = fragments[viewPager.currentItem]
+
+    private val current: Int get() = viewPager.currentItem
+    private val currentIndex get() = FragmentIndex.values[current]
 
     fun setCurrent(index: FragmentIndex, isOnBack: Boolean) {
         currentFragment?.lightCleanup()
@@ -120,9 +132,6 @@ class FragmentManagerAdapter(fm: FragmentManager, private val viewPager: NoSwipe
 /*
     fun fastForwardTo(to: FragmentIndex, msg: String = "Done in") = fastForwardTo(to, msg) {}
     fun fastForwardTo(to: FragmentIndex, after: () -> Unit) = fastForwardTo(to, "Done in", after)*/
-
-    // TODO add file 'last.txt' with last folder, and use that for use saved
-    // and gray it out if it doesn't exist
 
     // TODO add AcceptBlobsFragment \w seeing individual blobs and removal?
 

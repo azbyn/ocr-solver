@@ -23,6 +23,7 @@ import android.view.View
 import androidx.annotation.CallSuper
 import androidx.core.app.ActivityCompat
 import com.azbyn.ocr.*
+import com.azbyn.ocr.Misc.logd
 import com.azbyn.ocr.Misc.logw
 import com.azbyn.ocr.capture.CameraUtils.checkAspectsEqual
 import com.azbyn.ocr.capture.CameraUtils.chooseOptimalSize
@@ -39,7 +40,7 @@ abstract class CaptureFragmentBase:
         ActivityCompat.OnRequestPermissionsResultCallback {
 
     //@Suppress("UNUSED_PARAMETER")
-    private fun logd(s: String) = Misc.logd(s, offset=1)
+    private fun logd(s: String) = logd(s, offset=1)
     internal companion object {
         const val REQUEST_PERMISSIONS = 1
         val PERMISSIONS = arrayOf(
@@ -72,7 +73,6 @@ abstract class CaptureFragmentBase:
      * but the orientation of the has changed, and thus the preview rotation must be updated.
      */
     private var orientationListener: OrientationEventListener? = null
-
 
     /**
      * A [CameraCaptureSession] for camera preview.
@@ -124,12 +124,6 @@ abstract class CaptureFragmentBase:
      * [CaptureRequest.Builder] for the camera preview
      */
     private lateinit var previewRequestBuilder: CaptureRequest.Builder
-
-    /**
-     * An additional thread for running tasks that shouldn't block the UI. This is used for all
-     * callbacks from the [CameraDevice] and [CameraCaptureSession]s.
-     */
-    private var backgroundThread: HandlerThread? = null
 
     /**
      * A [Semaphore] to prevent the app from exiting before closing the camera.
@@ -289,7 +283,10 @@ abstract class CaptureFragmentBase:
     // BaseFragment functions:
     @CallSuper
     override fun initImpl(isOnBack: Boolean) {
-        startBackgroundThread()
+        synchronized(cameraStateLock) {
+            backgroundHandler = BackgroundHandler()
+        }
+        //startBackgroundThread()
         openCamera()
 
         // When the screen is turned off and turned back on, the SurfaceTexture is already
@@ -309,7 +306,12 @@ abstract class CaptureFragmentBase:
     final override fun lightCleanup() {
         orientationListener?.disable()
         closeCamera()
-        stopBackgroundThread()
+        tryOrComplain {
+            backgroundHandler?.stop()
+            synchronized(cameraStateLock) {
+                backgroundHandler = null
+            }
+        }
     }
     final override fun onResume() {
         super.onResume()
@@ -363,7 +365,7 @@ abstract class CaptureFragmentBase:
         val res = camera3AHandler.toggleFlash(previewRequestBuilder)
         logd("change flash")
         captureSession?.setRepeatingRequest(previewRequestBuilder.build(), preCaptureCallback,
-                backgroundHandler)
+                backgroundHandler?.handler)
         return res
     }
 
@@ -419,7 +421,7 @@ abstract class CaptureFragmentBase:
                 camera3AHandler.setFlashAndAE(previewRequestBuilder)
                 // Replace the existing repeating request with one with updated 3A triggers.
                 captureSession?.capture(previewRequestBuilder.build(), preCaptureCallback,
-                        backgroundHandler)
+                        backgroundHandler?.handler)
             } catch (e: CameraAccessException) {
                 loge(e)
             }
@@ -515,7 +517,7 @@ abstract class CaptureFragmentBase:
                         imageReader = ImageReader.newInstance(sz.width, sz.height,
                                 IMAGE_FORMAT, 1/*5*/)
                     }
-                    imageReader?.setOnImageAvailableListener(this, backgroundHandler)
+                    imageReader?.setOnImageAvailableListener(this, backgroundHandler?.handler)
                     this.cameraId = cameraId
                 }
                 return true
@@ -550,7 +552,7 @@ abstract class CaptureFragmentBase:
             var backgroundHandler: Handler?
             synchronized (cameraStateLock) {
                 cameraId = this.cameraId
-                backgroundHandler = this.backgroundHandler
+                backgroundHandler = this.backgroundHandler?.handler
             }
 
             // Attempt to open the camera. mStateCallback will be called on the background handler's
@@ -624,7 +626,7 @@ abstract class CaptureFragmentBase:
                                 // Finally, we start displaying the camera preview.
                                 cameraCaptureSession.setRepeatingRequest(
                                         previewRequestBuilder.build(),
-                                        preCaptureCallback, backgroundHandler)
+                                        preCaptureCallback, backgroundHandler?.handler)
                                 state = State.PREVIEW
                             } catch (e: Throwable) {
                                 loge(e)
@@ -637,7 +639,7 @@ abstract class CaptureFragmentBase:
                         override fun onConfigureFailed(session: CameraCaptureSession) {
                             showToast("Failed to configure camera.")
                         }
-                    }, backgroundHandler)
+                    }, backgroundHandler?.handler)
         } catch (e: CameraAccessException) {
             loge(e)
         }
@@ -789,7 +791,7 @@ abstract class CaptureFragmentBase:
             */
             // Set request tag to easily track results in callbacks.
             //captureBuilder.setTag(requestCounter.getAndIncrement())
-            captureSession?.capture(captureBuilder.build(), captureCallback, backgroundHandler)
+            captureSession?.capture(captureBuilder.build(), captureCallback, backgroundHandler?.handler)
         } catch (e: CameraAccessException) {
             loge(e)
         }
@@ -808,7 +810,7 @@ abstract class CaptureFragmentBase:
                         CameraMetadata.CONTROL_AF_TRIGGER_CANCEL
 
                 captureSession?.capture(previewRequestBuilder.build(), preCaptureCallback,
-                        backgroundHandler)
+                        backgroundHandler?.handler)
 
                 previewRequestBuilder[CaptureRequest.CONTROL_AF_TRIGGER] =
                         CameraMetadata.CONTROL_AF_TRIGGER_IDLE
@@ -820,43 +822,31 @@ abstract class CaptureFragmentBase:
 
 
 
-    //TODO MOVE TO STRUCT
-
     /**
      * ID of the current [CameraDevice].
      */
     private lateinit var cameraId: String
 
-    /**
-     * A [Handler] for running tasks in the background.
-     */
-    private var backgroundHandler: Handler? = null
-    /**
-     * Starts a background thread and its [Handler].
-     */
-    private fun startBackgroundThread() {
-        logd("()")
-        backgroundThread = HandlerThread("CameraBackground").also { it.start() }
-        synchronized(cameraStateLock) {
-            backgroundHandler = Handler(backgroundThread?.looper!!)
+    private var backgroundHandler: BackgroundHandler? = null
+
+    internal class BackgroundHandler {
+        /**
+         * An additional thread for running tasks that shouldn't block the UI. This is used for all
+         * callbacks from the [CameraDevice] and [CameraCaptureSession]s.
+         */
+        val thread = HandlerThread("CameraBackground").also { it.start() }
+        /**
+         * A [Handler] for running tasks in the background.
+         */
+        val handler: Handler = Handler(thread.looper!!)
+
+        /**
+         * Stops the background thread and its [Handler].
+         */
+        fun stop() {
+            logd("()")
+            thread.quitSafely()
+            thread.join()
         }
     }
-
-    /**
-     * Stops the background thread and its [Handler].
-     */
-    private fun stopBackgroundThread() {
-        logd("()")
-        backgroundThread?.quitSafely()
-        try {
-            backgroundThread?.join()
-            backgroundThread = null
-            synchronized(cameraStateLock) {
-                backgroundHandler = null
-            }
-        } catch (e: InterruptedException) {
-            loge(e)
-        }
-    }
-
 }
