@@ -43,8 +43,9 @@ class BlurRoiFragment : BaseSlidersFragment(
             medianBlur(inMat, bg, blurVal)
             absdiff(inMat, bg, resultMat)
         }
-        override fun update(p: IntArray) {
-            super.update(p)
+
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             updateImpl(baseMat, resultMat, blurVal, dilateVal)
         }
 

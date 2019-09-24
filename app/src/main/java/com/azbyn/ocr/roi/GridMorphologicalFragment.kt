@@ -29,8 +29,9 @@ class GridMorphologicalFragment : BaseSlidersFragment(
             if (value >= 3) morphologyEx(resultMat, resultMat, MORPH_CLOSE, kernel)
             //threshold(baseMat, baseMat, 0.0, 255.0, THRESH_BINARY)
         }
-        override fun update(p: IntArray) {
-            super.update(p)
+
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             val value = p[0]
             baseMat.copyTo(resultMat)
             updateImpl(resultMat, value)

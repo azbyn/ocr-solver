@@ -22,8 +22,8 @@ class RemoveLinesFragment : BaseSlidersFragment(
         var resultMat = Mat()
             private set
 
-        override fun update(p: IntArray) {
-            super.update(p)
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             val blur = p[0]
             val open = p[1] != 0
             val postBlur = p[2].toDouble()

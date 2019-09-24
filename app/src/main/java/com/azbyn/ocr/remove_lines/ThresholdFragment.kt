@@ -28,8 +28,8 @@ class ThresholdFragment : BaseSlidersFragment(
         var resultMat = Mat()
             private set
 
-        override fun update(p: IntArray) {
-            super.update(p)
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             val max = p[0]
             val min = p[1]
             val value = p[2]

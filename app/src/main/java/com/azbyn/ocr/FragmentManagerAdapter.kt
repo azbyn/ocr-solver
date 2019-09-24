@@ -137,6 +137,7 @@ class FragmentManagerAdapter(
 
     // TODO left-swipe list of fragments selector
     // TODO crash data with images saved etc.
+    // TODO landscape layouts
 
     fun fastForwardTo(to: FragmentIndex, msg: String = "Done in" /*, after: () -> Unit*/) {
         //logd("pending? $pendingFastForward")

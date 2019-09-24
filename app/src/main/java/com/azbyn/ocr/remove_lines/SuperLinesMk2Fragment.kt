@@ -37,8 +37,9 @@ class SuperLinesMk2Fragment : BaseSlidersFragment(
         override fun cleanup() {
             colored = Mat()
         }
-        override fun update(p: IntArray) {
-            super.update(p)
+
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             val minLength = p[0]
             val slineSize = p[1]
 

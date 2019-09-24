@@ -39,12 +39,12 @@ class LinesFragment : BaseSlidersFragment(
             colored = Mat()
         }
 
-        override fun update(p: IntArray) {
-            super.update(p)
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             JniImpl.linesExtract(
                     matAddr=baseMat.nativeObj,
                     linesAddr=lines.nativeObj,
-                    outputAddr=colored.nativeObj,
+                    outputAddr=if (isFastForward) 0 else colored.nativeObj,
                     thresh=p[0], length=p[1].toDouble(), rejectAngle=p[2] * 0.1)
         }
 

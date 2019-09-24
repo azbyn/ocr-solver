@@ -49,8 +49,9 @@ class LinesMaskFragment : BaseSlidersFragment(
                 line(resultMat, p1, p2, col, thickness)
             }
         }
-        override fun update(p: IntArray) {
-            super.update(p)
+
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             val thickness = p[0]
             val max = p[1]
             getLinesMask(resultMat, thickness)

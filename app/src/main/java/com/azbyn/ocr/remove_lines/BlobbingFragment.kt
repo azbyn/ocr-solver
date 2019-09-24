@@ -57,8 +57,8 @@ class BlobbingFragment : BaseSlidersFragment(
             logd("boundsSize = ${bounds?.size}")
         }
 
-        override fun update(p: IntArray) {
-            super.update(p)
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             //val i = p[0]
             val d = p[0]
             val e = p[1]
@@ -66,6 +66,7 @@ class BlobbingFragment : BaseSlidersFragment(
             JniImpl.bitwiseAndSingleBlob(x=0, y=0, w=fullMat.width(), h=fullMat.height(),
                     blobAddr=previewMat.nativeObj, imgAddr=fullMat.nativeObj,
                     dilateVal=d, erodeVal=e)
+            if (isFastForward) return
             colorMapAndNormalize(previewMat, previewMat)
             val col = Scalar(0.0, 255.0, 0.0, 0.0)
             val a = bounds!!

@@ -29,6 +29,7 @@ import com.azbyn.ocr.capture.CameraUtils.checkAspectsEqual
 import com.azbyn.ocr.capture.CameraUtils.chooseOptimalSize
 import com.azbyn.ocr.capture.CameraUtils.getOptimalReducedSize
 import com.azbyn.ocr.capture.CameraUtils.sensorToDeviceRotation
+import kotlinx.android.synthetic.main.capture.*
 import java.util.*
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
@@ -38,9 +39,9 @@ abstract class CaptureFragmentBase:
         BaseFragment(),
         ImageReader.OnImageAvailableListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
+    @Suppress("UNUSED_PARAMETER")
+    private fun logd(s: String) = Unit//logd(s, offset=1)
 
-    //@Suppress("UNUSED_PARAMETER")
-    private fun logd(s: String) = logd(s, offset=1)
     internal companion object {
         const val REQUEST_PERMISSIONS = 1
         val PERMISSIONS = arrayOf(
@@ -324,7 +325,7 @@ abstract class CaptureFragmentBase:
         super.onPause()
     }
 
-
+    @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //logd("CREATED CaptureFragment")
@@ -332,23 +333,39 @@ abstract class CaptureFragmentBase:
 
         orientationListener = object : OrientationEventListener(mainActivity,
                 SensorManager.SENSOR_DELAY_NORMAL) {
+            val THRESH = 10
+            val views = arrayOf(picture, calibrate, useSaved, flash)
+
+            var rotation = 0
+
+            override fun onOrientationChanged(orientation: Int) {
+                rotation = when {
+                    rotation != 0 && (orientation < THRESH || orientation > 360 - THRESH) -> 0
+                    rotation != 180 && (orientation in 180-THRESH..180+THRESH) -> 180
+                    rotation != 90 && (orientation in 270-THRESH..270+THRESH) -> 90
+                    rotation != 270 && (orientation in 90-THRESH..90+THRESH) -> 270
+                    else -> return
+                }
+                logd("o: $orientation, r: $rotation")
+                //rotation = r
+                val r = rotation.toFloat()
+                for (v in views) {
+                    v.rotation = r
+                }
+                this@CaptureFragmentBase._sensorOrientation = rotation
+                //orientation = rotation + 90
             //var last = -1
-            override fun onOrientationChanged(p0: Int) {
                 //if (p0 / 90 == last) return
                 //last = p0 / 90
-                if (textureView.isAvailable) {
-                    //logd("oida, new orientation $p0")
+                /*if (textureView.isAvailable) {
                     // Setup a new OrientationEventListener.  This is used to handle rotation
                     // events like a 180 degree rotation that do not normally trigger a call
                     // to onCreate to do view re-layout or otherwise cause the preview TextureView's
                     // size to change.
                     configureTransform(textureView.width, textureView.height)
-                }
+                }*/
             }
         }
-        //logd("INIT")
-        //since this is the first fragment we should call init
-        //initImpl(isOnBack=false)
     }
 
 
@@ -369,8 +386,10 @@ abstract class CaptureFragmentBase:
         return res
     }
 
-    protected var orientation = 0
-        private set
+    private var _orientation = 0
+    private var _sensorOrientation = 0
+
+    protected val orientation get() = /*_orientation - */ 90// - _sensorOrientation
 
     /**
      * Initiate a still image capture.
@@ -430,7 +449,7 @@ abstract class CaptureFragmentBase:
     }
 
     // permissions:
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+    final override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSIONS) {
             for (result in grantResults) {
@@ -783,7 +802,8 @@ abstract class CaptureFragmentBase:
             // Set orientation.
 
             val rotation = mainActivity.windowManager.defaultDisplay.rotation
-            orientation = sensorToDeviceRotation(characteristics, rotation)
+            _orientation = sensorToDeviceRotation(characteristics, rotation)
+
             // This is pointless as we don't use JPEG
             /*
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION,

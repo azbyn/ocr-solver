@@ -32,8 +32,8 @@ class BlurFragment : BaseSlidersFragment(
 
         override fun cleanup() = blurViewModel.cleanup()
 
-        override fun update(p: IntArray) {
-            super.update(p)
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             blurViewModel.updateImpl(baseMat, resultMat, blurVal=p[0], dilateVal=p[1])
         }
 

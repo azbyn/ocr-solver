@@ -23,8 +23,8 @@ class EditThresholdMinFragment : BaseSlidersFragment(
         val value get() = lastValues[0]
         val blur get() = lastValues[1]
 
-        override fun update(p: IntArray) {
-            super.update(p)
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             updateImpl(baseMat, resultMat, value, blur)
         }
         fun updateImpl(baseMat: Mat, resultMat: Mat, value: Int, blur: Int) {

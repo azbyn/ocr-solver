@@ -35,15 +35,14 @@ class SuperLinesFragment : BaseSlidersFragment(
             colored = Mat()
         }
 
-        override fun update(p: IntArray) {
-            super.update(p)
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             val minLength = p[0]
             val slineSize = p[1]
             val vertSlines = mutableListOf<SuperLine>()
             val horiSlines = mutableListOf<SuperLine>()
 
             val buf = IntArray(4)
-            colored = Mat(inViewModel.size, CV_8U)
             for (i in 0 until lines.rows()) {
                 lines.get(i, 0, buf)
                 val x1 = buf[0]
@@ -67,27 +66,46 @@ class SuperLinesFragment : BaseSlidersFragment(
             var totalDiff = 0
             var prev = -1
             var count = 0
-
-            fun iterateSline(/*len: Int, */mid: Int, p1: Point, p2: Point) {
-                if (prev != -1) {
-                    //logd("diff = ${mid - prev}")
-                    totalDiff += mid - prev
-                    count += 1
+            if (isFastForward) {
+                fun iterateSline(mid: Int) {
+                    if (prev != -1) {
+                        totalDiff += mid - prev
+                        count += 1
+                    }
+                    prev = mid
                 }
-                prev = mid
-                line(colored, p1, p2, /*Scalar((len * 200.0) / maxLen + 55)*/Scalar(255.0),
-                        thickness)
-            }
-            for (sl in horiSlines) {
-                if (sl.len < minLength) continue
-                val m = sl.mid.toDouble()
-                iterateSline(sl.mid, Point(sl.top.toDouble(), m), Point(sl.bot.toDouble(), m))
-            }
-            prev = -1
-            for (sl in vertSlines) {
-                if (sl.len < minLength) continue
-                val m = sl.mid.toDouble()
-                iterateSline(sl.mid, Point(m, sl.top.toDouble()), Point(m, sl.bot.toDouble()))
+                for (sl in horiSlines) {
+                    if (sl.len < minLength) continue
+                    iterateSline(sl.mid)
+                }
+                prev = -1
+                for (sl in vertSlines) {
+                    if (sl.len < minLength) continue
+                    iterateSline(sl.mid)
+                }
+            } else {
+                colored = Mat(inViewModel.size, CV_8U)
+                fun iterateSline(/*len: Int, */mid: Int, p1: Point, p2: Point) {
+                    if (prev != -1) {
+                        //logd("diff = ${mid - prev}")
+                        totalDiff += mid - prev
+                        count += 1
+                    }
+                    prev = mid
+                    line(colored, p1, p2, /*Scalar((len * 200.0) / maxLen + 55)*/Scalar(255.0),
+                            thickness)
+                }
+                for (sl in horiSlines) {
+                    if (sl.len < minLength) continue
+                    val m = sl.mid.toDouble()
+                    iterateSline(sl.mid, Point(sl.top.toDouble(), m), Point(sl.bot.toDouble(), m))
+                }
+                prev = -1
+                for (sl in vertSlines) {
+                    if (sl.len < minLength) continue
+                    val m = sl.mid.toDouble()
+                    iterateSline(sl.mid, Point(m, sl.top.toDouble()), Point(m, sl.bot.toDouble()))
+                }
             }
             /*Do this?
                 def reject_outliers(data, m=2):

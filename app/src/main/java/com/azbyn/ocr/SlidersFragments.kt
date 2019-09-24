@@ -45,7 +45,7 @@ abstract class SlidersViewModel: BaseViewModel() {
     fun fastForward(frag: BaseFragment, p: IntArray) {
         val t = measureTimeSec {
             init(frag)
-            update(p)
+            update(p, isFastForward=true)
             cleanup()
         }
         logd("$className: $t")
@@ -53,11 +53,12 @@ abstract class SlidersViewModel: BaseViewModel() {
     abstract fun update(frag: ImageViewFragment, p: IntArray)
 
     @CallSuper
-    protected open fun update(p: IntArray) {
+    protected open fun update(p: IntArray, isFastForward: Boolean) {
         for ((i, prog) in p.withIndex()) {
             lastValues[i] = prog
         }
     }
+    fun update(p: IntArray) = update(p, isFastForward=false)
     open fun cleanup() = Unit
 
     fun saveData(sliderDatas: Array<SliderData>) = JSONObject().apply {

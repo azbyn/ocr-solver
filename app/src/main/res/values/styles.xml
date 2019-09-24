@@ -19,6 +19,29 @@
         <item name="android:layout_height">@dimen/top_height</item>
     </style>
 
+    <style name="TopBarLand">
+        <item name="android:background">@color/controlBackground</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">@dimen/top_height</item>
+    </style>
+
+
+    <style name="BottomBar">
+        <item name="android:background">@color/controlBackground</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/bottom_height</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentStart">true</item>
+    </style>
+
+    <style name="BottomBarLand">
+        <item name="android:background">@color/controlBackground</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">@dimen/bottom_height</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
+    </style>
+
     <style name="TopText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -46,13 +69,6 @@
     </style>
 
 
-    <style name="BottomBar">
-        <item name="android:background">@color/controlBackground</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/bottom_height</item>
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_alignParentStart">true</item>
-    </style>
 
     <style name="BtnImage">
         <item name="android:textSize">@dimen/image_button_text_size</item>

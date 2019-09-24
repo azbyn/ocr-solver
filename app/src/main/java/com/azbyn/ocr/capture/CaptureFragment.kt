@@ -6,9 +6,6 @@ import android.hardware.SensorManager
 import android.media.Image
 import android.media.ImageReader
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.azbyn.ocr.*
@@ -22,9 +19,10 @@ import java.io.File
 import java.lang.System.currentTimeMillis
 import java.text.SimpleDateFormat
 import java.util.*
+import android.content.Context
+import android.view.*
 
 class CaptureFragment : CaptureFragmentBase() {
-
     @Suppress("UNUSED_PARAMETER")
     private fun logd(s: String) = Misc.logd(s, offset = 1)
 
@@ -108,6 +106,7 @@ class CaptureFragment : CaptureFragmentBase() {
 
     override fun onOK() {
         getViewModel<AcceptFragment.VM>().clearHistory()
+        useSaved.rotation = 0f
         super.onOK()
     }
 

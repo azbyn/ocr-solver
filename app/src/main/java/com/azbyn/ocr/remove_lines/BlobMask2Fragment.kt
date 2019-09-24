@@ -21,8 +21,8 @@ class BlobMask2Fragment : BaseSlidersFragment(
         var resultMat = Mat()
             private set
 
-        override fun update(p: IntArray) {
-            super.update(p)
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             //val smallThresh = p[0].toDouble()//32.0
             val dilate = p[0]
             val erode = p[1]

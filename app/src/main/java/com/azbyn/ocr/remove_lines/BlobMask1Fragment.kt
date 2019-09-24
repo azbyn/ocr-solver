@@ -26,8 +26,9 @@ class BlobMask1Fragment : BaseSlidersFragment(
         private val baseMat get() = getViewModel<RemoveLinesFragment.VM>().resultMat
         var resultMat = Mat()
             private set
-        override fun update(p: IntArray) {
-            super.update(p)
+
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             val t1 = p[0].toDouble()
             val t2 = p[1].toDouble()
             //val blur = p[2].toDouble()

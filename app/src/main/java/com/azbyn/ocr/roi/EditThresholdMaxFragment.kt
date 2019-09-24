@@ -19,8 +19,8 @@ class EditThresholdMaxFragment : BaseSlidersFragment(
         var resultMat = Mat()
             private set
 
-        override fun update(p: IntArray) {
-            super.update(p)
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             updateImpl(baseMat, resultMat, value=p[0])
         }
         fun updateImpl(baseMat: Mat, resultMat: Mat, value: Int) {

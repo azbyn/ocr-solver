@@ -42,8 +42,8 @@ class EditLinesFragment : BaseSlidersFragment(
             colored = Mat()
         }
 
-        override fun update(p: IntArray) {
-            super.update(p)
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
             val thresh = p[0]
             val length = p[1]
             val rejectAngle = p[2]
@@ -54,36 +54,62 @@ class EditLinesFragment : BaseSlidersFragment(
                     length.toDouble(), 20.0)// maxLineGap.toDouble())
             //logd("lines: ${lines.size()}")
             val buf = IntArray(4)
-            colored = Mat(baseMat.rows(), baseMat.cols(), CV_8UC3)
             var totalVAngle = 0.0
             var vangleCount = 0.0
 
             var totalHAngle = 0.0
             var hangleCount = 0.0
-            loop@ for (i in 0 until lines.rows()) {
-                lines.get(i, 0, buf)
-                // the angle is guaranteed to be in the first quadrant
-                val p1 = Point(buf[0].toDouble(), buf[1].toDouble())
-                val p2 = Point(buf[2].toDouble(), buf[3].toDouble())
-                val x = p2.x - p1.x
-                val y = p2.y - p1.y
-                val realAngle = atan2(y, x) / PI * 180
-                val len = sqrt(x*x+y*y)
-                val theta = atan2(abs(p2.y - p1.y), abs(p2.x - p1.x)) / PI * 180
-                val col = when {
-                    theta < rejectAngle -> {
-                        totalVAngle += realAngle * len
-                        vangleCount += len
-                        Scalar(0.0, 0.0, 255.0)
+
+            if (isFastForward) {
+                for (i in 0 until lines.rows()) {
+                    lines.get(i, 0, buf)
+                    // the angle is guaranteed to be in the first quadrant
+                    val p1 = Point(buf[0].toDouble(), buf[1].toDouble())
+                    val p2 = Point(buf[2].toDouble(), buf[3].toDouble())
+                    val x = p2.x - p1.x
+                    val y = p2.y - p1.y
+                    val realAngle = atan2(y, x) / PI * 180
+                    val len = sqrt(x * x + y * y)
+                    val theta = atan2(abs(p2.y - p1.y), abs(p2.x - p1.x)) / PI * 180
+                    when {
+                        theta < rejectAngle -> {
+                            totalVAngle += realAngle * len
+                            vangleCount += len
+                        }
+                        theta > (90 - rejectAngle) -> {
+                            totalHAngle += realAngle * len
+                            hangleCount += len
+                        }
+                        else -> Unit
                     }
-                    theta > (90-rejectAngle) -> {
-                        totalHAngle += realAngle * len
-                        hangleCount += len
-                        Scalar(0.0, 255.0, 0.0)
-                    }
-                    else -> continue@loop
                 }
-                line(colored, p1, p2, col, 2)
+            } else {
+                colored = Mat(baseMat.rows(), baseMat.cols(), CV_8UC3)
+                loop@ for (i in 0 until lines.rows()) {
+                    lines.get(i, 0, buf)
+                    // the angle is guaranteed to be in the first quadrant
+                    val p1 = Point(buf[0].toDouble(), buf[1].toDouble())
+                    val p2 = Point(buf[2].toDouble(), buf[3].toDouble())
+                    val x = p2.x - p1.x
+                    val y = p2.y - p1.y
+                    val realAngle = atan2(y, x) / PI * 180
+                    val len = sqrt(x * x + y * y)
+                    val theta = atan2(abs(p2.y - p1.y), abs(p2.x - p1.x)) / PI * 180
+                    val col = when {
+                        theta < rejectAngle -> {
+                            totalVAngle += realAngle * len
+                            vangleCount += len
+                            Scalar(0.0, 0.0, 255.0)
+                        }
+                        theta > (90 - rejectAngle) -> {
+                            totalHAngle += realAngle * len
+                            hangleCount += len
+                            Scalar(0.0, 255.0, 0.0)
+                        }
+                        else -> continue@loop
+                    }
+                    line(colored, p1, p2, col, 2)
+                }
             }
             val vAngle = if (vangleCount == 0.0) 0.0 else totalVAngle / vangleCount
             val hAngle = if (hangleCount == 0.0) 0.0 else totalHAngle / hangleCount - 90

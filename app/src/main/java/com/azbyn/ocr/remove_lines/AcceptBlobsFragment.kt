@@ -61,8 +61,10 @@ class AcceptBlobsFragment : BaseSlidersFragment(
             logd("boundsSize = ${bounds?.size}")
         }
 
-        override fun update(p: IntArray) {
-            super.update(p)
+        override fun update(p: IntArray, isFastForward: Boolean) {
+            super.update(p, isFastForward)
+            if (isFastForward) return
+
             val i = p[0]
             val d = p[1]
             val e = p[2]
