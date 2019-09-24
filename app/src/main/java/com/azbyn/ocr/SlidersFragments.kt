@@ -231,7 +231,8 @@ abstract class BaseSlidersFragment : DumbSlidersFragment {
     override fun updateImpl(p: IntArray) = viewModel.update(this, p)
 
     final override fun fastForwardImpl(p: IntArray) = viewModel.fastForward(this, p)
-    final override fun saveData(path: String) = viewModel.saveData(sliderDatas)
+    @CallSuper
+    override fun saveData(path: String) = viewModel.saveData(sliderDatas)
 
     @CallSuper
     override fun lightCleanup() = viewModel.cleanup()

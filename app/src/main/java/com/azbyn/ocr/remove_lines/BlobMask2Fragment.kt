@@ -8,9 +8,9 @@ import org.opencv.imgproc.Imgproc.*
 
 class BlobMask2Fragment : BaseSlidersFragment(
         //SliderData("Thrsh", default = 32/*24*/, min = 0, max = 255, stepSize = 1),
-        SliderData("Dilate",  default = 3, min = 1, max = 31, stepSize = 2),
-        SliderData("Erode",  default = 3, min = 1, max = 31, stepSize = 2),
-        SliderData("Blur",  default = 7, min = 1, max = 31, stepSize = 2)
+        SliderData("Dilate", default = 3, min = 1, max = 31, stepSize = 2),
+        SliderData("Erode", default = 3, min = 1, max = 31, stepSize = 2),
+        SliderData("Blur", default = 7, min = 1, max = 31, stepSize = 2)
 ) {
     override val viewModel: VM by viewModelDelegate()
     override val topBarName: String get() = "Blob Mask 2"

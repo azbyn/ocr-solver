@@ -33,6 +33,7 @@ class CaptureFragment : CaptureFragmentBase() {
             private set
         private val formater = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS", TIME_LOCALE)
         private var lastFile: File? = null
+        var flashEnabled = true
 
         fun init(mainActivity: MainActivity): Boolean {
             lastFile = null
@@ -106,7 +107,7 @@ class CaptureFragment : CaptureFragmentBase() {
 
     override fun onOK() {
         getViewModel<AcceptFragment.VM>().clearHistory()
-        useSaved.rotation = 0f
+        viewModel.flashEnabled = flashEnabled
         super.onOK()
     }
 
@@ -164,6 +165,15 @@ class CaptureFragment : CaptureFragmentBase() {
         super.initImpl(isOnBack)
         val res = viewModel.init(mainActivity)
         setUseSavedColor(res)
+        logd("b: $isOnBack, f: $flashEnabled, v: ${viewModel.flashEnabled}")
+        if (isOnBack) {
+            flashEnabled = viewModel.flashEnabled
+        } else {
+            viewModel.flashEnabled = flashEnabled
+        }
+        flash.setImageResource(
+                if (flashEnabled) R.drawable.ic_flash_auto
+                else R.drawable.ic_flash_off)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -9,8 +9,8 @@ import org.opencv.imgproc.Imgproc.rectangle
 
 class BlobbingFragment : BaseSlidersFragment(
         //SliderData("Mask", default = 0, max = 1)
-        SliderData("Dilate", default=3, min=1, max=31, stepSize=2),
-        SliderData("Erode", default=3, min=1, max=31, stepSize=2)
+        SliderData("Dilate", default=5, min=1, max=31, stepSize=2),
+        SliderData("Erode", default=1, min=1, max=31, stepSize=2)
         //SliderData("Morph", default = 1, min = 0, max = 3, stepSize = 1)
 ) {
 

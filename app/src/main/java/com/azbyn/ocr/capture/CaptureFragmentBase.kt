@@ -282,8 +282,11 @@ abstract class CaptureFragmentBase:
 
 
     // BaseFragment functions:
+
     @CallSuper
-    override fun initImpl(isOnBack: Boolean) {
+    override fun initImpl(isOnBack: Boolean) = init()
+
+    private fun init() {
         synchronized(cameraStateLock) {
             backgroundHandler = BackgroundHandler()
         }
@@ -302,6 +305,7 @@ abstract class CaptureFragmentBase:
         if (orientationListener?.canDetectOrientation()==true) {
             orientationListener?.enable()
         }
+        setupFlash()
     }
 
     final override fun lightCleanup() {
@@ -317,7 +321,7 @@ abstract class CaptureFragmentBase:
     final override fun onResume() {
         super.onResume()
         logd("()")
-        initImpl(isOnBack=false)
+        init()
     }
 
     final override fun onPause() {
@@ -346,13 +350,12 @@ abstract class CaptureFragmentBase:
                     rotation != 270 && (orientation in 90-THRESH..90+THRESH) -> 270
                     else -> return
                 }
-                logd("o: $orientation, r: $rotation")
                 //rotation = r
                 val r = rotation.toFloat()
                 for (v in views) {
                     v.rotation = r
                 }
-                this@CaptureFragmentBase._sensorOrientation = rotation
+                this@CaptureFragmentBase.deviceOrientation = rotation
                 //orientation = rotation + 90
             //var last = -1
                 //if (p0 / 90 == last) return
@@ -378,18 +381,37 @@ abstract class CaptureFragmentBase:
     private val characteristics get() = camera3AHandler.characteristics
 
     //protected functions:
+    var flashEnabled get() = camera3AHandler.flashEnabled
+        set(v) { camera3AHandler.flashEnabled = v }
+
     protected fun toggleFlash(): Boolean {
-        val res = camera3AHandler.toggleFlash(previewRequestBuilder)
+        val res = camera3AHandler.toggleFlash()
+        camera3AHandler.setFlashAndAE(previewRequestBuilder)
         logd("change flash")
         captureSession?.setRepeatingRequest(previewRequestBuilder.build(), preCaptureCallback,
                 backgroundHandler?.handler)
         return res
     }
+    private fun setupFlash() {
+        if (camera3AHandler.flashEnabled) return
+        logd("setup")
+        camera3AHandler.setFlashAndAE(previewRequestBuilder)
+        captureSession?.setRepeatingRequest(previewRequestBuilder.build(), preCaptureCallback,
+                backgroundHandler?.handler)
+    }
 
-    private var _orientation = 0
-    private var _sensorOrientation = 0
+    //private var _orientation = 0
+    private var deviceOrientation = 0
 
-    protected val orientation get() = /*_orientation - */ 90// - _sensorOrientation
+    protected var orientation = 0
+        private set
+    /*: Int get() {
+        //val r = if (_sensorOrientation == 270) 180
+        //    else if (_sensorOrientation == 180) 270
+        //    else _orientation - _sensorOrientation
+        //logd("o: $_orientation, r: $_sensorOrientation -> $r")
+        return (_orientation - _sensorOrientation + 360) % 360
+    } /*_orientation - 90 - _sensorOrientation*/*/
 
     /**
      * Initiate a still image capture.
@@ -802,7 +824,8 @@ abstract class CaptureFragmentBase:
             // Set orientation.
 
             val rotation = mainActivity.windowManager.defaultDisplay.rotation
-            _orientation = sensorToDeviceRotation(characteristics, rotation)
+            logd("rot $rotation")
+            orientation = sensorToDeviceRotation(characteristics, deviceOrientation/*rotation*/)
 
             // This is pointless as we don't use JPEG
             /*
@@ -816,6 +839,7 @@ abstract class CaptureFragmentBase:
             loge(e)
         }
     }
+
     /**
      * Called after a capture has completed; resets the AF trigger state for the
      * pre-capture sequence.
@@ -839,8 +863,6 @@ abstract class CaptureFragmentBase:
             loge(e)
         }
     }
-
-
 
     /**
      * ID of the current [CameraDevice].

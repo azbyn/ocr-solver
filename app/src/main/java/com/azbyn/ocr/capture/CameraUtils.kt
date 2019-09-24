@@ -103,8 +103,9 @@ internal object CameraUtils {
      */
     fun sensorToDeviceRotation(c: CameraCharacteristics, deviceOrientation: Int): Int {
         val sensorOrientation = c[CameraCharacteristics.SENSOR_ORIENTATION]!!
+        return (sensorOrientation - deviceOrientation + 360) % 360
         // Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
-        return (sensorOrientation - 90 * deviceOrientation + 360) % 360
+        //return (sensorOrientation - 90 * deviceOrientation + 360) % 360
     }
 
     internal class CompareSizesByArea : Comparator<Size> {

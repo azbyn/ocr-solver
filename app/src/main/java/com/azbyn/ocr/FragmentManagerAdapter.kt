@@ -136,8 +136,8 @@ class FragmentManagerAdapter(
     // TODO add AcceptBlobsFragment \w seeing individual blobs and removal?
 
     // TODO left-swipe list of fragments selector
-    // TODO crash data with images saved etc.
-    // TODO landscape layouts
+    // TODO crash data with images saved etc.?
+    // TODO rotate on landscape for all?
 
     fun fastForwardTo(to: FragmentIndex, msg: String = "Done in" /*, after: () -> Unit*/) {
         //logd("pending? $pendingFastForward")

@@ -6,16 +6,17 @@ import android.hardware.camera2.CameraMetadata
 import android.hardware.camera2.CaptureRequest
 import android.hardware.camera2.CaptureRequest as CR
 
-internal class Camera3AHandler(val characteristics: CameraCharacteristics) {
-    val canUseAE = characteristics[CC.CONTROL_AE_AVAILABLE_MODES]?.contains(
-            CC.CONTROL_AE_MODE_ON_AUTO_FLASH) == true
-    val canUseAF = characteristics[CC.CONTROL_AF_AVAILABLE_MODES]?.contains(
-            CC.CONTROL_AF_MODE_CONTINUOUS_PICTURE) == true
-    val canUseAWB = characteristics[CC.CONTROL_AWB_AVAILABLE_MODES]?.contains(
-            CC.CONTROL_AWB_MODE_AUTO) == true
-    val canUseFlash = characteristics[CC.FLASH_INFO_AVAILABLE] == true
+internal class Camera3AHandler(
+        val characteristics: CameraCharacteristics,
+        var flashEnabled: Boolean = true) {
 
-    var flashEnabled = true
+    private val canUseAE = characteristics[CC.CONTROL_AE_AVAILABLE_MODES]?.contains(
+            CC.CONTROL_AE_MODE_ON_AUTO_FLASH) == true
+    private val canUseAF = characteristics[CC.CONTROL_AF_AVAILABLE_MODES]?.contains(
+            CC.CONTROL_AF_MODE_CONTINUOUS_PICTURE) == true
+    private val canUseAWB = characteristics[CC.CONTROL_AWB_AVAILABLE_MODES]?.contains(
+            CC.CONTROL_AWB_MODE_AUTO) == true
+    private val canUseFlash = characteristics[CC.FLASH_INFO_AVAILABLE] == true
     /**
      * Whether or not the currently configured camera device is fixed-focus.
      */
@@ -29,9 +30,8 @@ internal class Camera3AHandler(val characteristics: CameraCharacteristics) {
             characteristics[CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL] ==
                     CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
 
-    fun toggleFlash(previewRequestBuilder: CaptureRequest.Builder): Boolean {
+    fun toggleFlash(): Boolean {
         flashEnabled = !flashEnabled
-        setFlashAndAE(previewRequestBuilder)
         return flashEnabled
     }
 
