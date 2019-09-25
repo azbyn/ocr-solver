@@ -27,7 +27,8 @@ class BlobbingFragment : BaseSlidersFragment(
 
     class VM : SlidersViewModel() {
         private val maskMat get() = getViewModel<BlobMask2Fragment.VM>().resultMat
-        private val fullMat get() = getViewModel<RemoveLinesFragment.VM>().resultMat
+        private val fullMat get() = getViewModel<BlobMask1Fragment.VM>().baseMat
+
         //private val fullMat get() = getViewModel<FinalThresholdFragment.VM>().resultMat
         private var previewMat = Mat()
 

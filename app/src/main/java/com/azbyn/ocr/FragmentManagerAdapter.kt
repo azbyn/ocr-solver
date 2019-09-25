@@ -44,11 +44,13 @@ enum class FragmentIndex(private val clazz: Class<*>) {
 
     ACCEPT_DENSITY(AcceptDensityFragment::class.java),
     BLUR(BlurFragment::class.java),
+    // skipped if removeLines = false
     THRESHOLD(ThresholdFragment::class.java),
     LINES(LinesFragment::class.java),
     SUPER_LINES_MK2(SuperLinesMk2Fragment::class.java),
     LINES_MASK(LinesMaskFragment::class.java),
     REMOVE_LINES(RemoveLinesFragment::class.java),
+    // end skipped
     BLOB_MASK1(BlobMask1Fragment::class.java),
     BLOB_MASK2(BlobMask2Fragment::class.java),
     BLOBBING(BlobbingFragment::class.java),
@@ -129,27 +131,31 @@ class FragmentManagerAdapter(
     }
 
     private var pendingFastForward = false
-/*
-    fun fastForwardTo(to: FragmentIndex, msg: String = "Done in") = fastForwardTo(to, msg) {}
-    fun fastForwardTo(to: FragmentIndex, after: () -> Unit) = fastForwardTo(to, "Done in", after)*/
 
+
+    // TODO move 'hasLines' to AcceptFragment,
+    //  and look for some marker (a square) to get the size
+    //  (do this automatically if no lines are detected)
     // TODO add AcceptBlobsFragment \w seeing individual blobs and removal?
+
+    // TODO undo perspective from line angles? (aka don't require calibration)
 
     // TODO left-swipe list of fragments selector
     // TODO crash data with images saved etc.?
     // TODO rotate on landscape for all?
-
-    fun fastForwardTo(to: FragmentIndex, msg: String = "Done in" /*, after: () -> Unit*/) {
+    fun fastForwardFromToImpl(from: FragmentIndex, to: FragmentIndex, msg: String="Done in") {
         //logd("pending? $pendingFastForward")
         if (pendingFastForward) return
-        if (currentIndex == to) return
+        if (from == to) return
         pendingFastForward = true
         //logd("skip")
+        // here the exact fragment doesn't matter,
+        // we care just that it's initialised
         val frag = currentFragment!!
         frag.tryOrComplain {
             val t = measureTimeSec {
                 var fi: FragmentIndex = currentIndex
-                val mainActivity = currentFragment!!.mainActivity
+                val mainActivity = frag.mainActivity
                 while (fi != to) {
                     val f = getItem(fi)
                     f.mainActivity = mainActivity
@@ -161,9 +167,12 @@ class FragmentManagerAdapter(
             logd("$msg ${t}s.")
             frag.showToast("$msg ${t}s.")
 
-            setCurrent(to, isOnBack=false)
         }
         pendingFastForward = false
         //logd("finish")
+    }
+    fun fastForwardTo(to: FragmentIndex, msg: String = "Done in") {
+        fastForwardFromToImpl(currentIndex, to, msg)
+        setCurrent(to, isOnBack=false)
     }
 }

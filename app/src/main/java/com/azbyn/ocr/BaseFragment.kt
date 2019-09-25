@@ -2,7 +2,6 @@ package com.azbyn.ocr
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Message
 import android.widget.Toast
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
@@ -47,7 +46,7 @@ abstract class BaseFragment : Fragment() {
         val full = this::class.java.name
         return full.substring(full.lastIndexOf('.')+1)
     }
-    private val fragmentIndex: FragmentIndex by lazy {
+    val fragmentIndex: FragmentIndex by lazy {
         //logd("I am :${this::class.java.name}")
         FragmentIndex.get(this::class.java)
     }
@@ -95,10 +94,6 @@ abstract class BaseFragment : Fragment() {
 
     fun setCurrent(index: FragmentIndex, isOnBack: Boolean=false) =
             fragmentManager.setCurrent(index, isOnBack)
-
-/*
-    fun replaceFragment(num: Int)
-            = FragmentManagerAdapter.replaceFragment(num, this)*/
 
     fun showToast(text: String) = mainActivity.runOnUiThread {
         Toast.makeText(mainActivity, text, Toast.LENGTH_SHORT).show()

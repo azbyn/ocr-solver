@@ -1,6 +1,5 @@
 package com.azbyn.ocr
 
-import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,12 +19,12 @@ import org.opencv.imgproc.Imgproc.warpAffine
 class AcceptDensityFragment : ImageViewFragment() {
     companion object {
         private const val ROTATE_DEFAULT = true
+        private const val REMOVE_LINES_DEFAULT = true
     }
 
     override fun getImageView(): ImageView = imageView
 
     private val viewModel: VM by viewModelDelegate()
-    private val path get() = mainActivity.path
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -41,8 +40,10 @@ class AcceptDensityFragment : ImageViewFragment() {
         viewModel.init(this)
         if (isOnBack) {
             autoRotate.isChecked = viewModel.wasRotatedLast
+            removeLines.isChecked = viewModel.removeLines
         } else {
             autoRotate.isChecked = ROTATE_DEFAULT
+            removeLines.isChecked = REMOVE_LINES_DEFAULT
         }
         viewModel.update(this, autoRotate.isChecked)
 
@@ -66,9 +67,21 @@ class AcceptDensityFragment : ImageViewFragment() {
             autoRotate.isChecked = !autoRotate.isChecked
             viewModel.update(this, autoRotate.isChecked)
         }
+        removeLines.setOnClickListener {
+            removeLines.isChecked = !autoRotate.isChecked
+            viewModel.removeLines = removeLines.isChecked
+        }
         ok.setOnClickListener { onOK() }
-        fastForward.setOnClickListener {
-            fragmentManager.fastForwardTo(FragmentIndex.BLOBBING)
+        fastForward.setOnClickListener { fastForwardTo(FragmentIndex.BLOBBING) }
+        feelingLucky.setOnClickListener { fastForwardTo(FragmentIndex.FINAL) }
+    }
+    private fun fastForwardTo(index: FragmentIndex) {
+        if (viewModel.removeLines) {
+            fragmentManager.fastForwardTo(index)
+        } else {
+            fragmentManager.fastForwardFromToImpl(fragmentIndex, nextFragment)
+            fragmentManager.fastForwardFromToImpl(FragmentIndex.BLOB_MASK1, index)
+            setCurrent(index, isOnBack=false)
         }
     }
 
@@ -82,8 +95,11 @@ class AcceptDensityFragment : ImageViewFragment() {
         private var m = Mat()
         var wasRotatedLast = ROTATE_DEFAULT
             private set
+        var removeLines = true
+
         fun saveData() = JSONObject().apply {
             put("rotated", wasRotatedLast)
+            put("removeLines", removeLines)
             put("angle", angle)
         }
 

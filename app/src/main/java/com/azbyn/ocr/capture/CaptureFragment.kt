@@ -36,6 +36,7 @@ class CaptureFragment : CaptureFragmentBase() {
         var flashEnabled = true
 
         fun init(mainActivity: MainActivity): Boolean {
+            logd("init")
             lastFile = null
             val f = File(mainActivity.path, "last.txt")
             //logd("exists ${f.exists()}")
@@ -46,6 +47,7 @@ class CaptureFragment : CaptureFragmentBase() {
             //logd("exists2 ${dirFile.exists()}")
             if (!dirFile.exists()) return false
             lastFile = dirFile
+            logd("true: $lastFile")
             return true
         }
 
@@ -160,7 +162,10 @@ class CaptureFragment : CaptureFragmentBase() {
         impl(if (value) R.color.default_ else R.color.grayedOut)
     }
 
-    //override fun onBack() = Unit
+    override fun init() {
+        super.init()
+        viewModel.init(mainActivity)
+    }
     override fun initImpl(isOnBack: Boolean) {
         super.initImpl(isOnBack)
         val res = viewModel.init(mainActivity)

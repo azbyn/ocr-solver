@@ -28,11 +28,13 @@ class SuperLinesMk2Fragment : BaseSlidersFragment(
 
     class VM : SlidersViewModel() {
         override fun logd(s: String) = Unit
+
         private val inViewModel: LinesFragment.VM by viewModelDelegate()
         private var colored = Mat()
         val maxLen get() = inViewModel.maxLen
         val vertMids = mutableListOf<Int>()
         val horiMids = mutableListOf<Int>()
+        //private val scale get() = getViewModel<ThresholdFragment.VM>().inverseScale
 
         override fun cleanup() {
             colored = Mat()
@@ -49,17 +51,21 @@ class SuperLinesMk2Fragment : BaseSlidersFragment(
             val buf = IntArray(4)
 
             colored = Mat(inViewModel.size, CV_8U)
+            val scale = getViewModel<ThresholdFragment.VM>().inverseScale
+            logd("scale: $scale")
             for (i in 0 until inViewModel.lines.rows()) {
                 inViewModel.lines.get(i, 0, buf)
-                val x1 = buf[0]
-                val y2 = buf[1]// because buf[1] is usually greater than buff[3]
-                val x2 = buf[2]
-                val y1 = buf[3]
+                val x1 = buf[0]*scale
+                val y2 = buf[1]*scale// because buf[1] is usually greater than buff[3]
+                val x2 = buf[2]*scale
+                val y1 = buf[3]*scale
                 // the angle is guaranteed to be in the first quadrant
-                val theta = atan2(abs(y2 - y1).toFloat(), abs(x2 - x1).toFloat()) / PI * 180
+                val theta = atan2(abs(y2 - y1)/*.toFloat()*/, abs(x2 - x1)/*.toFloat()*/) / PI * 180
                 when {
-                    theta < rejectAngle -> addLine(slineSize, horiSlines, y1, y2, x1, x2)
-                    theta > (90 - rejectAngle) -> addLine(slineSize, vertSlines, x1, x2, y1, y2)
+                    theta < rejectAngle -> addLine(slineSize, horiSlines,
+                            y1.toInt(), y2.toInt(), x1.toInt(), x2.toInt())
+                    theta > (90 - rejectAngle) -> addLine(slineSize, vertSlines,
+                            x1.toInt(), x2.toInt(), y1.toInt(), y2.toInt())
                     else -> Unit
                 }
             }

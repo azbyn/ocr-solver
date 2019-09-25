@@ -1,0 +1,9 @@
+These versions are mostly to identify 'data.json', refactoring and bug fixes
+shouldn't matter in updating the version number
+
+0.2:
+- added 'removeLines' in AcceptDensityFragment
+- replaced 'Morph' slider with 'Scale'
+
+0.1:
+Mostly working prototype

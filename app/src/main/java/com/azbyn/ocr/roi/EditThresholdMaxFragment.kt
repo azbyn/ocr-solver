@@ -13,10 +13,11 @@ class EditThresholdMaxFragment : BaseSlidersFragment(
     override val viewModel: VM by viewModelDelegate()
     override val topBarName get() = mainActivity.getString(R.string.edit_threshold_max)
 
+    /*
     override fun saveData(path: String): JSONObject {
         imwrite("$path/max.jpg", viewModel.resultMat)
         return super.saveData(path)
-    }
+    }*/
 
     class VM : SlidersViewModel() {
         private val inViewModel: BlurRoiFragment.VM by viewModelDelegate()

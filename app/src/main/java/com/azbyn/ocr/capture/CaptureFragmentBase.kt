@@ -286,7 +286,8 @@ abstract class CaptureFragmentBase:
     @CallSuper
     override fun initImpl(isOnBack: Boolean) = init()
 
-    private fun init() {
+    @CallSuper
+    open fun init() {
         synchronized(cameraStateLock) {
             backgroundHandler = BackgroundHandler()
         }

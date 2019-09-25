@@ -16,7 +16,79 @@
             android:text="@string/accept_density" />
     </RelativeLayout>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/BottomBar"
+        android:layout_height="110dp"
+        android:id="@+id/bottom">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/middle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"/>
+
+
+        <Button style="@style/Button"
+            android:id="@+id/feelingLucky"
+            android:text="@string/feeling_lucky"
+
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/middle" />
+        <Button style="@style/Button"
+            android:id="@+id/fastForward"
+            android:text="@string/fastForward"
+
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/middle"/>
+
+
+        <CheckedTextView style="@style/CheckBox"
+            android:id="@+id/autoRotate"
+            android:text="@string/auto_rotate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <CheckedTextView style="@style/CheckBox"
+            android:id="@+id/removeLines"
+            android:text="Has Lines"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button style="@style/BtnImage"
+            android:id="@+id/ok"
+            android:background="@drawable/ic_ok_small"
+            android:text="@string/continue_"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!--Button style="@style/BtnImage50"
+            android:id="@+id/fastForward"
+            android:background="@drawable/ic_fast_forward_small"
+            android:text="@string/fastForward"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" /-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--androidx.constraintlayout.widget.ConstraintLayout
         style="@style/BottomBar"
         android:id="@+id/bottom">
 
@@ -43,7 +115,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.9"
             app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout-->
 
     <TextView
         android:id="@+id/densityText"

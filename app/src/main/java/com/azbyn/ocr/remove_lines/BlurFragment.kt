@@ -15,6 +15,10 @@ class BlurFragment : BaseSlidersFragment(
 
     override val topBarName: String get() = mainActivity.getString(R.string.blur)
 
+    private val removeLines get() = getViewModel<AcceptDensityFragment.VM>().removeLines
+    override val nextFragment: FragmentIndex get() =
+        if (removeLines) super.nextFragment else FragmentIndex.BLOB_MASK1
+
     override fun initImpl() {
         viewModel.init(this)
         super.initImpl()

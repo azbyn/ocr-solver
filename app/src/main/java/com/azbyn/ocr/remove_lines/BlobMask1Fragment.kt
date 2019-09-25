@@ -21,9 +21,17 @@ class BlobMask1Fragment : BaseSlidersFragment(
 
     override val viewModel: VM by viewModelDelegate()
     override val topBarName: String get() = "Blob Mask 1"
+    private val removeLines get() = getViewModel<AcceptDensityFragment.VM>().removeLines
+    override val prevFragment: FragmentIndex get() =
+        if (removeLines) super.prevFragment
+        else FragmentIndex.ACCEPT_DENSITY
 
     class VM : SlidersViewModel() {
-        private val baseMat get() = getViewModel<RemoveLinesFragment.VM>().resultMat
+        private val removeLines get() = getViewModel<AcceptDensityFragment.VM>().removeLines
+        val baseMat get() =
+            if (removeLines) getViewModel<RemoveLinesFragment.VM>().resultMat
+            else getViewModel<BlurFragment.VM>().resultMat
+
         var resultMat = Mat()
             private set
 
