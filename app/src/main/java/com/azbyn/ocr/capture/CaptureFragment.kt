@@ -19,7 +19,6 @@ import java.io.File
 import java.lang.System.currentTimeMillis
 import java.text.SimpleDateFormat
 import java.util.*
-import android.content.Context
 import android.view.*
 
 class CaptureFragment : CaptureFragmentBase() {

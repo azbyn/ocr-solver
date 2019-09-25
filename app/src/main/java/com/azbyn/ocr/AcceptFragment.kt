@@ -50,6 +50,9 @@ class AcceptFragment : ImageViewFragment() {
         imageView.resetZoom()
         setImagePreview(viewModel.resultMat)
     }
+
+    override fun fastForward() = Unit
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //logd("Accept.onViewCreated")
