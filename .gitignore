@@ -31,9 +31,11 @@ Thumbs.db
 build/
 .navigation
 captures/
-output.json 
+output.json
 
 #NDK
 obj/
 app/src/main/jniLibs
+app/src/main/jniIncludes
+app/src/main/staticlibs
 .externalNativeBuild
