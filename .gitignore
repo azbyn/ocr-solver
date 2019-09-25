@@ -13,6 +13,7 @@ bin/
 gen/
 .cxx
 
+
 # Local configuration file (sdk path, etc)
 local.properties
 
@@ -34,4 +35,5 @@ output.json
 
 #NDK
 obj/
+app/src/main/jniLibs
 .externalNativeBuild
