@@ -196,14 +196,15 @@ void evalSlines(const std::vector<SuperLine>& slines,
 enum class ShouldDraw { No, Yes };
 
 template<ShouldDraw draw, SuperLine::Type type>
-void drawLines(const std::vector<SuperLine>& slines,
-        std::vector<int>& mids,
-        cv::Mat* output,
-        const cv::Size& size,
-        double scale,
-        int minLength) {
+void iterSlines(const std::vector<SuperLine>& slines,
+                std::vector<int>& mids,
+                cv::Mat* output,
+                const cv::Size& size,
+        //double scale,
+                int minLength) {
 
     int bottom = (type == SuperLine::Type::Vert) ? size.width : size.height;
+    evalSlines(slines, mids, minLength, bottom);
 
     if constexpr (draw == ShouldDraw::Yes) {
         int lineMaxLength = (type == SuperLine::Type::Vert) ? size.height: size.width;
@@ -222,7 +223,6 @@ void drawLines(const std::vector<SuperLine>& slines,
             }
         };
 
-        evalSlines(slines, mids, minLength, bottom);
 
         const cv::Scalar col1(255.0);
         const cv::Scalar col2(127.0);
@@ -235,8 +235,6 @@ void drawLines(const std::vector<SuperLine>& slines,
         for (auto& sl : slines) {
             drawLine(sl.mid, col2, thickness2);
         }
-    } else {
-        evalSlines(slines, mids, minLength, bottom);
     }
 }
 
@@ -280,12 +278,12 @@ JNIFUN(void, superLinesRemoval) (JNIEnv* env, jobject,
         using D = ShouldDraw;
         LOGD("output: %p", output);
         if (output == nullptr) {
-            drawLines<D::No, T::Hori>(horiSlines, mids.hori, output, size, scale, minLength);
-            drawLines<D::No, T::Vert>(vertSlines, mids.vert, output, size, scale, minLength);
+            iterSlines<D::No, T::Hori>(horiSlines, mids.hori, output, size, minLength);
+            iterSlines<D::No, T::Vert>(vertSlines, mids.vert, output, size, minLength);
         } else {
             cv::Mat(size, CV_8U).copyTo(*output);
-            drawLines<D::Yes, T::Hori>(horiSlines, mids.hori, output, size, scale, minLength);
-            drawLines<D::Yes, T::Vert>(vertSlines, mids.vert, output, size, scale, minLength);
+            iterSlines<D::Yes, T::Hori>(horiSlines, mids.hori, output, size, minLength);
+            iterSlines<D::Yes, T::Vert>(vertSlines, mids.vert, output, size, minLength);
         }
     } catch (std::exception& e) {
         LOGE("%s", e.what());

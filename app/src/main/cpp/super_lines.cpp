@@ -37,7 +37,7 @@ std::string vecToString(const std::vector<T>& vec) {
     return res;
 }
 
-void addLine(int slineSize, std::vector<SuperLine>& slines, const Line& line) {
+void addLine(int slineSize, std::vector<SuperLine>& slines, Line&& line) {
     if (line.len == 0) return;
     auto end = slines.end();
     auto index = end;
@@ -147,8 +147,7 @@ void iterateSlines(const std::vector<SuperLine>& slines, cv::Mat* output, int mi
 
 JNIFUN(jint, superLinesGetDensity) (JNIEnv* env, jobject,
         jlong linesAddr, jlong outputAddr /* might be null*/,
-        jint minLength, jint slineSize, jdouble rejectAngle,
-        jint DESIRED_DENSITY) {
+        jint minLength, jint slineSize, jdouble rejectAngle) {
     const auto& lines = addrToMat(linesAddr);
     try {
         std::vector<SuperLine> vertSlines;

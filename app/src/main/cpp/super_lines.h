@@ -40,6 +40,6 @@ struct SuperLine {
     std::string toString() const;
     //const char* c_str() const;
 };
-void addLine(int slineSize, std::vector<SuperLine>& slines, const Line& line);
+void addLine(int slineSize, std::vector<SuperLine>& slines, Line&& line);
 
 #endif //AZBYN_OCR_SUPER_LINES_H

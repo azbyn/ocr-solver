@@ -20,7 +20,7 @@ import kotlin.system.measureTimeMillis
 
 typealias CvRect = org.opencv.core.Rect
 
-const val DESIRED_DENSITY = 24
+val DESIRED_DENSITY = JniImpl.getDesiredDensity()
 const val GRAYED_OUT_COLOR: Int = 0xA0_00_00_00.toInt()
 const val IMAGE_FILE_NAME = "img.png"
 //shouldn't really matter

@@ -22,15 +22,13 @@ class BlobberData {
     };
     cv::Mat buff;
     jint startX;
-    const jint desiredDensity;
     Rect roi;
 
     uchar* buffLine = nullptr;
 public:
-    explicit BlobberData(jint desiredDensity)
-            : buff(desiredDensity*2, desiredDensity*2, CV_8U),
-            startX(desiredDensity),
-            desiredDensity(desiredDensity),
+    explicit BlobberData()
+            : buff(DESIRED_DENSITY*2, DESIRED_DENSITY*2, CV_8U),
+            startX(DESIRED_DENSITY),
             roi(0,0,0,0) { }
 
     cv::Rect getGlobalBounds(int imgX, int imgY) const {
@@ -48,7 +46,7 @@ public:
         if (roi.b < buffY) roi.b = buffY;
         buffX += startX;
         if (buffX < 0) {
-            int padding = std::max(desiredDensity, -buffX);
+            int padding = std::max(DESIRED_DENSITY, -buffX);
             startX += padding;
             //buffX += padding;
             //LOGD("add left %d %d %d", buffX, padding, startX);
@@ -58,7 +56,7 @@ public:
 
         if (buffY >= buff.rows) {
             //LOGD("ADD BUFF ROW (%d)", buffY);
-            copyMakeBorder(buff, buff, 0, desiredDensity, 0, 0, cv::BORDER_CONSTANT);
+            copyMakeBorder(buff, buff, 0, DESIRED_DENSITY, 0, 0, cv::BORDER_CONSTANT);
         } else if (buffY < 0) {
             LOGE("y is negative? (%d)", buffY);
             throw std::runtime_error("y is negative?");
@@ -70,7 +68,7 @@ public:
         //int buffX = startX + cur.x - imgX;
         if (buffX + startX >= buff.cols) {
             //LOGD("add right");
-            copyMakeBorder(buff, buff, 0, 0, 0, desiredDensity, cv::BORDER_CONSTANT);
+            copyMakeBorder(buff, buff, 0, 0, 0, DESIRED_DENSITY, cv::BORDER_CONSTANT);
             buffLine = buff.ptr(buffY);
         }
         if (roi.r < buffX) roi.r = buffX;
@@ -90,8 +88,8 @@ class Blobber {
     std::vector<cv::Rect> boundsArr;
 
 public:
-    Blobber(const cv::Mat& mask, ArrayList& result, jint desiredDensity)
-            : result(result), data(desiredDensity) {
+    Blobber(const cv::Mat& mask, ArrayList& result)
+            : result(result), data() {
         mask.copyTo(this->mask);
     }
 
@@ -177,13 +175,12 @@ private:
 };
 JNIFUN(jintArray, blobbing) (JNIEnv* env, jobject /*thiz*/,
                              jlong maskAddr,
-                             jobject resultList,
-                             jint desiredDensity) {
+                             jobject resultList) {
     const auto& mask = *(cv::Mat*)maskAddr;
     try {
         ArrayList result(env, resultList);
 
-        Blobber b(mask, result, desiredDensity);
+        Blobber b(mask, result);
         b.blobbing();
         auto& bounds = b.getBounds();
         static_assert(sizeof(cv::Rect) == 4 * sizeof(jint));

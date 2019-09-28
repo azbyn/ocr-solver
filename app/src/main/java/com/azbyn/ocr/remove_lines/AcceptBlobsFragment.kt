@@ -51,8 +51,7 @@ class AcceptBlobsFragment : BaseSlidersFragment(
                 val t = measureTimeSec {
                     bounds = JniImpl.blobbing(
                             maskAddr=maskMat.nativeObj,
-                            result=blobs,
-                            desiredDensity=DESIRED_DENSITY)
+                            result=blobs)
                 }
                 bounds ?: throw Exception("bounds == null?")
                 logd("blobbinTime: $t")

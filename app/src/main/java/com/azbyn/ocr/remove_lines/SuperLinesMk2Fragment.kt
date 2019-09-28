@@ -17,6 +17,8 @@ class SuperLinesMk2Fragment : BaseSlidersFragment(
         sliderDatas[0].default = viewModel.maxLen / 5
     }
 
+    /*
+    //THIS crashes the app with (SIGTRAP)
     override fun onDestroy() {
         super.onDestroy()
         viewModel.onDestroy()
@@ -25,7 +27,7 @@ class SuperLinesMk2Fragment : BaseSlidersFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.onCreate()
-    }
+    }*/
 
     class VM : SlidersViewModel() {
         override fun logd(s: String) = Unit

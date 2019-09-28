@@ -68,3 +68,4 @@ extern "C" void JNI_OnUnload(JavaVM *vm, void *reserved) {
         lazyClassDatas(env, BaseClassData::Mode::Delete);
     }
 }
+JNIFUN(int, getDesiredDensity)(JNIEnv*, jobject) { return DESIRED_DENSITY; }

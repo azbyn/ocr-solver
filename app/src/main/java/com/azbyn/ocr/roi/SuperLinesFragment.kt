@@ -37,8 +37,7 @@ class SuperLinesFragment : BaseSlidersFragment(
             }
             resultDensity = JniImpl.superLinesGetDensity(lines.nativeObj,
                     outputAddr=if (isFastForward) 0 else colored.nativeObj,
-                    minLength=p[0], slineSize=p[1], rejectAngle=rejectAngle.toDouble(),
-                    desiredDensity=DESIRED_DENSITY)
+                    minLength=p[0], slineSize=p[1], rejectAngle=rejectAngle.toDouble())
         }
 
         override fun update(frag: ImageViewFragment, p: IntArray) {
