@@ -30,7 +30,7 @@ class ThresholdFragment : BaseSlidersFragment(
         private val baseMat get() = getViewModel<BlurFragment.VM>().resultMat
         var resultMat = Mat()
             private set
-        val inverseScale get() = lastValues[2] * 0.1f
+        val inverseScale get() = lastValues[2] * 0.1
 
         override fun update(p: IntArray, isFastForward: Boolean) {
             super.update(p, isFastForward)

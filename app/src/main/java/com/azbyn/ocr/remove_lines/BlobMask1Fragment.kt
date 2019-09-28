@@ -14,8 +14,8 @@ import org.opencv.core.Size
 import org.opencv.imgproc.Imgproc.*
 
 class BlobMask1Fragment : BaseSlidersFragment(
-        SliderData("thrsh1", default = 100, min = 0, max = 255*2, stepSize = 1),
-        SliderData("thrsh2", default = 200, min = 0, max = 255*2, stepSize = 1)
+        SliderData("thrsh1", default = 75/*100*/, min = 0, max = 255*2, stepSize = 1),
+        SliderData("thrsh2", default = 150/*200*/, min = 0, max = 255*2, stepSize = 1)
         //SliderData("Blur",  default = 9, min = 1, max = 31, stepSize = 2)
 ) {
 

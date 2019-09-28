@@ -26,6 +26,26 @@ object JniImpl {
     external fun morphologicalSkeleton(srcAddr: Long, dstAddr: Long)
 
 
-    //external fun matrixScreenToDrawable(mat: FloatArray, vec: FloatArray)
+// superLinesGetDensity(lines.nativeObj, colored.nativeObj, minLength=p[0],
+// slineSize=p[1], rejectAngle=rejectAngle, desiredDensity=DESIRED_DENSITY)
+    external fun superLinesGetDensity(linesAddr: Long, outputAddr: Long,
+                                      minLength: Int, slineSize: Int, rejectAngle: Double,
+                                      desiredDensity: Int): Int
+
+
+    external fun superLinesRemoval(linesAddr: Long, outputAddr: Long,
+                                   mids: Long,
+                                   width: Int, height: Int,
+                                   minLength: Int, slineSize: Int,
+                                   rejectAngle: Double, scale: Double)
+
+    external fun newSlineMids(): Long
+    external fun delSlineMids(addr: Long)
+
+
+    external fun getLinesMask(resultAddr: Long, thickness: Int,
+                              midsAddr: Long, width: Int, height: Int)
+
+        //external fun matrixScreenToDrawable(mat: FloatArray, vec: FloatArray)
     //external fun matrixDrawableToScreen(mat: FloatArray, vec: PointF)
 }

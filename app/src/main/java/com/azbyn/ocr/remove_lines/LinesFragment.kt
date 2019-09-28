@@ -27,6 +27,8 @@ class LinesFragment : BaseSlidersFragment(
         var lines = MatOfInt4()
             private set
         val size: Size get() = baseMat.size()
+        val sizeWidth get() = baseMat.width()
+        val sizeHeight get() = baseMat.height()
         val maxLen get() = min(baseMat.width(), baseMat.height())
         val rejectAngle get() = lastValues[2] * 0.1
 

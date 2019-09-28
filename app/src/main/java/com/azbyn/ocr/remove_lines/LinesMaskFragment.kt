@@ -27,8 +27,16 @@ class LinesMaskFragment : BaseSlidersFragment(
         var resultMat = Mat()
             private set
 
-        @Suppress("MemberVisibilityCanBePrivate")
-        fun getLinesMask(resultMat: Mat, thickness: Int) {
+        //@Suppress("MemberVisibilityCanBePrivate")
+        private fun getLinesMask(resultMat: Mat, thickness: Int) {
+            JniImpl.getLinesMask(
+                    resultAddr=resultMat.nativeObj,
+                    thickness=thickness,
+                    midsAddr=inViewModel.mids,
+                    width=fullMat.width(),
+                    height=fullMat.height()
+            )
+            /*
             /*resultMat = */Mat(fullMat.size(), CV_8U).copyTo(resultMat)
             val col = Scalar(255.0)
             val p1 = Point(0.0, -1.0)
@@ -47,7 +55,7 @@ class LinesMaskFragment : BaseSlidersFragment(
                 p1.x = md
                 p2.x = md
                 line(resultMat, p1, p2, col, thickness)
-            }
+            }*/
         }
 
         override fun update(p: IntArray, isFastForward: Boolean) {

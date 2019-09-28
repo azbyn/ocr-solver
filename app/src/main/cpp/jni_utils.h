@@ -12,6 +12,9 @@
 #include <android/log.h>
 #include <opencv2/core/mat.hpp>
 
+//TODO use only this definition
+constexpr int DESIRED_DENSITY = 24;
+
 constexpr char LOG_TAG[] = "azbyn-ocr";
 
 #define LOG(PRIORITY, PRIORITY_STR, FORMAT, ...) \

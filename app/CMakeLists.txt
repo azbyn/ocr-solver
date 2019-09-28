@@ -9,6 +9,8 @@ add_library(jni SHARED
         src/main/cpp/blobbing.cpp
         src/main/cpp/lines.cpp
         src/main/cpp/super_lines.cpp
+        src/main/cpp/super_lines_removal.cpp
+        src/main/cpp/lines_mask.cpp
         src/main/cpp/cv_utils.cpp
         src/main/cpp/misc.cpp
         src/main/cpp/jni_utils.cpp)
