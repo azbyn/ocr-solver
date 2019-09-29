@@ -903,7 +903,7 @@ abstract class CaptureFragmentBase:
          * Stops the background thread and its [Handler].
          */
         fun stop() {
-            logd("()")
+            //logd("()")
             thread.quitSafely()
             thread.join()
         }

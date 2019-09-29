@@ -70,6 +70,8 @@ class AcceptFragment : ImageViewFragment() {
 
 
     class VM : BaseViewModel() {
+        override fun logd(s: String) = Unit
+
         val resultMat get() = getViewModel<CaptureFragment.VM>().mat
         private val history = arrayListOf<String>()
         private var changedTimestamp = false

@@ -5,7 +5,9 @@
 
 #include <opencv2/imgproc.hpp>
 
-#include <stdexcept>
+//don't log
+#undef LOGD
+#define LOGD(...)
 
 // int arithmetic is recommended
 bool isSmall(int n) { return n <= DESIRED_DENSITY * 3 / 4; /*.75*/ }
@@ -46,7 +48,7 @@ void addIfBigReversed(int diff, int end, int index, std::vector<int>& mids) {
         }
     }
 };
-
+class SlineEndError {};
 void evalSlines(const std::vector<SuperLine>& slines,
                 std::vector<int>& mids,
                 int minLength,
@@ -101,10 +103,9 @@ void evalSlines(const std::vector<SuperLine>& slines,
 
         while (i < len) {
             int curr = getCurr(i);
-            // having references would have been useful
             int j = i + 1;
             while (slines[j].len <= minLength) {
-                if (++j > len) throw std::out_of_range("");
+                if (++j > len) throw SlineEndError();
             }
             next = getCurr(j);
 
@@ -152,7 +153,7 @@ void evalSlines(const std::vector<SuperLine>& slines,
             }
             ++i;
         }
-    } catch (std::out_of_range&) {
+    } catch (SlineEndError&) {
         LOGD("caught");
     }
 

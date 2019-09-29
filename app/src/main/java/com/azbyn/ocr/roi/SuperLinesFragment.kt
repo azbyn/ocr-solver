@@ -18,7 +18,7 @@ class SuperLinesFragment : BaseSlidersFragment(
     }
 
     class VM : SlidersViewModel() {
-        override fun logd(s: String) = Unit// Misc.logd(s)
+        //override fun logd(s: String) = Unit// Misc.logd(s)
         private val inViewModel: EditLinesFragment.VM by viewModelDelegate()
         private val lines get() = inViewModel.lines
         private val rejectAngle get() = inViewModel.rejectAngle
@@ -42,10 +42,7 @@ class SuperLinesFragment : BaseSlidersFragment(
 
         override fun update(frag: ImageViewFragment, p: IntArray) {
             frag.tryOrComplain {
-                val t = measureTimeSec {
-                    update(p)
-                }
-                logd("time = $t")
+                logTimeSec { update(p) }
                 frag.setImageGrayscalePreview(colored)
             }
         }

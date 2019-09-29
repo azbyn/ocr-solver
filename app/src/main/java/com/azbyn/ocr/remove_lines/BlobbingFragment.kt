@@ -45,16 +45,16 @@ class BlobbingFragment : BaseSlidersFragment(
         override fun init(frag: BaseFragment) {
             super.init(frag)
             frag.tryOrComplain {
-                val t = measureTimeSec {
+                //val t = measureTimeSec {
                     bounds = JniImpl.blobbing(
                             maskAddr=maskMat.nativeObj,
                             result=blobs)
-                }
+                //}
                 bounds ?: throw Exception("bounds == null?")
-                logd("blobbinTime: $t")
+                //logd("blobbinTime: $t")
             }
-            logd("blobSize = ${blobs.size}")
-            logd("boundsSize = ${bounds?.size}")
+            //logd("blobSize = ${blobs.size}")
+            //logd("boundsSize = ${bounds?.size}")
         }
 
         override fun update(p: IntArray, isFastForward: Boolean) {
@@ -83,7 +83,7 @@ class BlobbingFragment : BaseSlidersFragment(
 
         override fun update(frag: ImageViewFragment, p: IntArray) {
             frag.tryOrComplain {
-                update(p)
+                logTimeSec { update(p) }
                 frag.setImagePreview(previewMat)
             }
         }

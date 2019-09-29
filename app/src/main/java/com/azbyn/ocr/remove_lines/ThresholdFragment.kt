@@ -54,10 +54,7 @@ class ThresholdFragment : BaseSlidersFragment(
 
         override fun update(frag: ImageViewFragment, p: IntArray) {
             frag.tryOrComplain {
-                val t = measureTimeSec {
-                    update(p)
-                }
-                logd("time: $t")
+                logTimeSec { update(p) }
                 frag.setImageGrayscalePreview(resultMat)
             }
         }

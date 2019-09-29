@@ -36,7 +36,7 @@ class EditThresholdMinFragment : BaseSlidersFragment(
 
         override fun update(frag: ImageViewFragment, p: IntArray) {
             frag.tryOrComplain {
-                update(p)
+                logTimeSec { update(p) }
                 frag.setImageGrayscalePreview(resultMat)
             }
         }

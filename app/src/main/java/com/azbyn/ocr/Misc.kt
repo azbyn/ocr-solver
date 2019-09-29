@@ -44,6 +44,9 @@ object Misc {
     }
 
     //TODO write to a log file
+
+    fun logi(msg: String = "", e: Throwable? = null, offset: Int=0) =
+            Log.i(TAG, fmtMsg("D", msg, offset), e)
     fun logd(msg: String = "", e: Throwable? = null, offset: Int=0) =
             Log.d(TAG, fmtMsg("D", msg, offset), e)
 

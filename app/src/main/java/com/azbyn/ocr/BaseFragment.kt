@@ -10,10 +10,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.azbyn.ocr.Misc.logd
 import org.json.JSONObject
 import kotlin.reflect.KProperty
+import kotlin.system.measureTimeMillis
 
 abstract class DumbViewModel: ViewModel() {
     open fun quickInit(frag: BaseFragment) = Unit
     protected open fun logd(s: String) { logd(s, offset=1) }
+    protected open fun logi(s: String) { Misc.logi(s, offset=1) }
+
+    protected inline fun logTimeSec(f: () -> Unit) =
+            logi("${measureTimeMillis(f) / 1000f}")
 
     val className: String get() {
         val full = this::class.java.name

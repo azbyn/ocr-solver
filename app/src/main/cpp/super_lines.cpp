@@ -9,6 +9,11 @@
 //#define TO_RAD (CV_PI / 180)
 //#define TO_DEG (180 / CV_PI)
 
+
+//don't log
+#undef LOGD
+#define LOGD(...)
+
 bool SuperLine::add(const Line& line, int slineSize) {
     bool res = std::abs(mid - line.mid) <= slineSize;
     //LOGD("add: %d, %d (%d)", mid, line.mid, res);

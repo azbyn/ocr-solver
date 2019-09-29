@@ -23,7 +23,7 @@ import android.view.*
 
 class CaptureFragment : CaptureFragmentBase() {
     @Suppress("UNUSED_PARAMETER")
-    private fun logd(s: String) = Misc.logd(s, offset = 1)
+    private fun logd(s: String) = Unit// Misc.logd(s, offset = 1)
 
     class VM : DumbViewModel() {
         var mat = Mat()
